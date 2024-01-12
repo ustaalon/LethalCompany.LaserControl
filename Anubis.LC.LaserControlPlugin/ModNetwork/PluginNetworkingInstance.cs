@@ -152,14 +152,9 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
             currentTurretsAsDict = turrets.ToDictionary(t => t.NetworkObjectId);
             ModStaticHelper.Logger.LogWarning("---- END SYNC TURRET ----");
 
-
             ModStaticHelper.Logger.LogWarning("---- START SYNC RAYCAST ----");
             LaserPointerRaycast[] laserPointerRaycasts = FindAllLaserPointerRaycasts();
             currentLaserPointerRaycast = laserPointerRaycasts;
-            foreach (LaserPointerRaycast laser in laserPointerRaycasts)
-            {
-                ModStaticHelper.Logger.LogInfo($"{laser.GetHashCode()}, {laser.GetInstanceID()}");
-            }
             currentLaserPointerRaycastAsDict = laserPointerRaycasts.ToDictionary(t => t.GetHashCode());
             ModStaticHelper.Logger.LogWarning("---- END SYNC RAYCAST ----");
         }
