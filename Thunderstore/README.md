@@ -20,6 +20,11 @@ Please consider support by [this link](https://ko-fi.com/ustaalon). It will help
 - Turret rotation not always working smoothly or correctly 
 - Turret timing issues
 
+## Roadmap
+- Making sure everything related to the turret is stable
+- Add LethalConfig for configuration
+- Making the laser pointer do more cool stuff
+
 ## Additional Credits
 - Theme_Light for the idea to create this mod and for the mod avatar
 - [KingNejjie](https://www.youtube.com/@KingNejjie) for helping me testing the mod
