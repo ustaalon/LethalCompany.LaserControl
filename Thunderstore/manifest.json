@@ -1,0 +1,10 @@
+{
+    "name": "LaserWarming",
+    "version_number": "0.0.1",
+    "website_url": "https://github.com/ustaalon/LethalCompany.LaserWarming",
+    "description": "Binding the laser pointer to the turret. What bad things could happen?",
+    "dependencies": [
+        "BepInEx-BepInExPack-5.4.2100",
+        "Ozone-Runtime_Netcode_Patcher-0.2.5"
+    ]
+}
