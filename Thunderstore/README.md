@@ -1,10 +1,6 @@
 # Laser Control
 Binding the laser pointer to the turret. What bad things could happen?
 
-# IMPORTANT
-**THIS IS JUST A PREPRATION FOR BETA RELEASE DURING THE WEEKEND.**
-**THE MOD WILL NOT WORK AT THE MOMENT AS I'M STILL DOING SOME CLOSED TESTS. YOU CAN DOWNLOAD IT AND IT WILL BE AUTOMATICALLY UPDATE DURING THE WEEKEND**
-
 ## How To Use?
 1. Find a pointer laser
 2. Point it to the turret body or to someone
