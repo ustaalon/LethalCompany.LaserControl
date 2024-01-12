@@ -1,4 +1,4 @@
-# Laser Warming
+# Laser Control
 Binding the laser pointer to the turret. What bad things could happen?
 
 ## How To Use?
@@ -12,7 +12,7 @@ Binding the laser pointer to the turret. What bad things could happen?
 So this mod is on beta phase, which means it might not be stable enough with other mods or might have some issues. Feel free to contribute by forking the repo, give feedback and report issues. 
 
 ## Bugs, Issues & Requests
-Please let me know about any bugs, issues or requests regarding my mod by opening an [issue](https://github.com/ustaalon/LethalCompany.LaserWarming/issues), by leaving a comment in [this Discord channel](https://discord.com/channels/1168655651455639582/1192080227241840640) or by sending me an email at ustaalon@gmail.com
+Please let me know about any bugs, issues or requests regarding my mod by opening an [issue](https://github.com/ustaalon/LethalCompany.LaserControl/issues), by leaving a comment in [this Discord channel](https://discord.com/channels/1168655651455639582/1192080227241840640) or by sending me an email at ustaalon@gmail.com
 
 Please consider support by [this link](https://ko-fi.com/ustaalon). It will help me to continue and focus on mods and open-source.
 
@@ -30,4 +30,4 @@ Please consider support by [this link](https://ko-fi.com/ustaalon). It will help
 - Pointer laser binded to the closest turret
 - Pointer laser can deactivate turret for few seconds
 
-[All changelogs can be found here](https://github.com/ustaalon/LethalCompany.LaserWarming/blob/rc/CHANGELOG.md)
+[All changelogs can be found here](https://github.com/ustaalon/LethalCompany.LaserControl/blob/rc/CHANGELOG.md)

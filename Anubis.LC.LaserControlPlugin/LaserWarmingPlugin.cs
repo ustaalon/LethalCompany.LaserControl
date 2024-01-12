@@ -8,10 +8,10 @@ namespace Anubis.LC.LaserControlPlugin
 {
     [BepInPlugin(ModStaticHelper.modGUID, ModStaticHelper.modName, ModStaticHelper.modVersion)]
     [BepInDependency(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION)]
-    public class LaserWarmingPlugin : BaseUnityPlugin
+    public class LaserControlPlugin : BaseUnityPlugin
     {
         private Harmony HarmonyInstance = new Harmony(ModStaticHelper.modGUID);
-        public static LaserWarmingPlugin? Instance;
+        public static LaserControlPlugin? Instance;
 
         private NetcodeValidator netcodeValidator;
 
@@ -30,7 +30,7 @@ namespace Anubis.LC.LaserControlPlugin
             ModStaticHelper.Logger.LogInfo($"{ModStaticHelper.modGUID} is loading...");
 
             ModStaticHelper.Logger.LogInfo($"Installing patches");
-            HarmonyInstance.PatchAll(typeof(LaserWarmingPlugin).Assembly);
+            HarmonyInstance.PatchAll(typeof(LaserControlPlugin).Assembly);
 
             DontDestroyOnLoad(this);
 

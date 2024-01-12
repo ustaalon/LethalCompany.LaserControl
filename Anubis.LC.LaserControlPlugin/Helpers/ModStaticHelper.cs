@@ -4,9 +4,9 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
 {
     public static class ModStaticHelper
     {
-        public const string modGUID = "Anubis.LaserWarming";
-        public const string modName = "LaserWarming";
-        public const string modVersion = "1.0.0";
+        public const string modGUID = "Anubis.LaserControl";
+        public const string modName = "LaserControl";
+        public const string modVersion = "0.0.1";
 
         public static ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(modGUID);
     }
