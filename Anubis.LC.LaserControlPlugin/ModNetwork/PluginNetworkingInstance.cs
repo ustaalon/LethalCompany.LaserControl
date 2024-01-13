@@ -20,7 +20,7 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         private LaserPointerRaycast[] currentLaserPointerRaycast = new LaserPointerRaycast[0];
         private Dictionary<int, LaserPointerRaycast> currentLaserPointerRaycastAsDict = new Dictionary<int, LaserPointerRaycast>();
 
-        private readonly float minDistance = 25f;
+        private readonly float maxDistance = 25f;
 
         public LaserPointerRaycast[] GetLaserPointerRaycasts()
         {
@@ -74,11 +74,30 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         public Turret GetNearestTurret(Transform localPlayerTransform)
         {
             Turret[] turretArray = GetAllTurrets();
+            Vector3 forward = Quaternion.Euler(0f, (int)(0f - 45f) / 2f, 0f) * localPlayerTransform.forward;
 
+            // Check for turret in LOS
+            foreach (Turret turretInLOS in turretArray)
+            {
+                Ray shootRay = new Ray(localPlayerTransform.position, forward);
+
+                if (Physics.Raycast(shootRay, out RaycastHit hit, maxDistance, 1051400, QueryTriggerInteraction.Ignore))
+                {
+                    if (hit.transform.CompareTag(turretArray[0].tag))
+                    {
+                        return turretArray
+                        .Where(t => turretInLOS.NetworkObjectId == t.NetworkObjectId && Vector3.Distance(t.transform.position, localPlayerTransform.position) <= maxDistance)
+                        .OrderBy(t => Vector3.Distance(t.transform.position, localPlayerTransform.position))
+                        .FirstOrDefault();
+                    }
+                }
+            }
+
+            // If turret in LOS is null, just find the closest one
             return turretArray
-                .Where(turret => Vector3.Distance(turret.transform.position, localPlayerTransform.position) <= minDistance)
-                .OrderBy(turret => Vector3.Distance(turret.transform.position, localPlayerTransform.position))
-                .FirstOrDefault();
+            .Where(turret => Vector3.Distance(turret.transform.position, localPlayerTransform.position) <= maxDistance)
+            .OrderBy(turret => Vector3.Distance(turret.transform.position, localPlayerTransform.position))
+            .FirstOrDefault();
         }
 
         [ServerRpc(RequireOwnership = false)]

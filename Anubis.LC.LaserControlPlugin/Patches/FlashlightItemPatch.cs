@@ -26,6 +26,12 @@ namespace Anubis.LC.LaserControlPlugin.Patches
                 var turret = __instance.CheckForNearestTurret();
                 if (turret == null) return;
 
+                if (PrevUsedTurret && PrevUsedTurret.NetworkObjectId != turret.NetworkObjectId)
+                {
+                    PluginNetworkingInstance.Instance.SwitchTurretModeServerRpc(PrevUsedTurret.NetworkObjectId, TurretMode.Detection);
+                    PluginNetworkingInstance.Instance.StopTurretFireVisualClientRpc(PrevUsedTurret.NetworkObjectId);
+                }
+
                 __instance.UseLaserPointerItemBatteries();
                 PluginNetworkingInstance.Instance.TurnTowardsLaserBeamIfHasLOSServerRpc(turret.NetworkObjectId, laserPointerRaycast.GetHashCode());
 
