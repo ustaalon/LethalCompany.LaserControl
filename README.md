@@ -1,8 +1,8 @@
 # Laser Control
-Binding the laser pointer to the turret. What bad things could happen?
+Binding the laser pointer to the turret. What bad things could happen? (Still in developing)
 
 ## How To Use?
-1. Find a pointer laser
+1. Find or buy pointer laser
 2. Point it to the turret body or to someone
 
 - If you point it to the body - turret will be offline for 5 seconds
@@ -10,6 +10,9 @@ Binding the laser pointer to the turret. What bad things could happen?
 
 ## THIS MOD IS ON BETA PHASE
 So this mod is on beta phase, which means it might not be stable enough with other mods or might have some issues. Feel free to contribute by forking the repo, give feedback and report issues. 
+
+## Configuration
+You can set in the mod configuration if you want to be able to buy laser pointer via the store or use all mod features (as some not yet stable)
 
 ## Bugs, Issues & Requests
 Please let me know about any bugs, issues or requests regarding my mod by opening an [issue](https://github.com/ustaalon/LethalCompany.LaserControl/issues), by leaving a comment in [this Discord channel](https://discord.com/channels/1168655651455639582/1192080227241840640) or by sending me an email at ustaalon@gmail.com
@@ -30,9 +33,18 @@ Please consider support by [this link](https://ko-fi.com/ustaalon). It will help
 - [KingNejjie](https://www.youtube.com/@KingNejjie) for helping me testing the mod
 
 # Release Notes
-### 1.0.0
+### 0.1.0
+- Added LethalConfig
+- Turret control by pointer laser is now under "experimental" configuration (you need to configure it)
+- Turret can be turn off for few seconds by using the laser pointer
+- Laser pointer is now buyable (not scrap) for 50 credits
+
+### 0.0.2
+- Readme and mod info
+
+### 0.0.1
 - Initial release
-- Pointer laser binded to the closest turret
+- Pointer laser bind to the closest turret
 - Pointer laser can deactivate turret for few seconds
 
 [All changelogs can be found here](https://github.com/ustaalon/LethalCompany.LaserControl/blob/rc/CHANGELOG.md)
