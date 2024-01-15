@@ -1,4 +1,5 @@
 ﻿using Anubis.LC.LaserControlPlugin.Components;
+using Anubis.LC.LaserControlPlugin.Helpers;
 using HarmonyLib;
 namespace Anubis.LC.LaserControlPlugin.Patches
 {
@@ -9,6 +10,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
         [HarmonyPostfix]
         public static void Start(Turret __instance)
         {
+            ModStaticHelper.Logger.LogInfo("Added LaserPointerTargetTurret to the turret");
             __instance.gameObject.AddComponent<LaserPointerTargetTurret>();
         }
     }

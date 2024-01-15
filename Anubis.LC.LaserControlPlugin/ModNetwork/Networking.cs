@@ -169,7 +169,7 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
             LaserPointerRaycast[] laserPointerRaycasts = FindAllLaserPointerRaycasts();
             foreach (var laser in laserPointerRaycasts)
             {
-                ModStaticHelper.Logger.LogInfo($"{laser.GetHashCode()}");
+                ModStaticHelper.Logger.LogInfo($"Laser pointer ID: {laser.GetHashCode()}");
             }
             currentLaserPointerRaycast = laserPointerRaycasts;
             currentLaserPointerRaycastAsDict = laserPointerRaycasts.ToDictionary(t => t.GetHashCode());

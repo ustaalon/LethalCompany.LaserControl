@@ -25,13 +25,13 @@ namespace Anubis.LC.LaserControlPlugin.Components
         private Vector3 offset = Vector3.up * 0.1f;
         private Vector3 hitPoint;
 
-        public void Awake()
+        private void Awake()
         {
             turret = GetComponent<Turret>();
             Instances.Add(this);
         }
 
-        public void OnDestroy()
+        private void OnDestroy()
         {
             Instances.Remove(this);
         }

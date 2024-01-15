@@ -3,7 +3,6 @@ using HarmonyLib;
 using Anubis.LC.LaserControlPlugin.Helpers;
 using Anubis.LC.LaserControlPlugin.ModNetwork;
 using RuntimeNetcodeRPCValidator;
-using Anubis.LC.LaserControlPlugin.Store;
 
 namespace Anubis.LC.LaserControlPlugin
 {

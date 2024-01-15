@@ -22,14 +22,16 @@ namespace Anubis.LC.LaserControlPlugin.Patches
             if (__instance.gameObject.GetComponent<LaserPointerRaycast>() == null)
             {
                 __instance.gameObject.AddComponent<LaserPointerRaycast>();
-                Networking.Instance.SyncAllTurretsAndRaycastsServerRpc();
             }
             else
             {
                 LaserPointerRaycast laserPointerRaycast = __instance.GetComponent<LaserPointerRaycast>();
-                laserPointerRaycast.enabled = laserPointerRaycast.state;
+                if (!laserPointerRaycast.state)
+                {
+                    Object.Destroy(laserPointerRaycast);
+                }
             }
-
+            Networking.Instance.SyncAllTurretsAndRaycastsServerRpc();
         }
 
         [HarmonyPatch("Update")]
@@ -53,12 +55,6 @@ namespace Anubis.LC.LaserControlPlugin.Patches
                     Networking.Instance.SwitchTurretModeServerRpc(PrevUsedTurret.NetworkObjectId, TurretMode.Detection);
                     Networking.Instance.StopTurretFireVisualServerRpc(PrevUsedTurret.NetworkObjectId);
                 }
-                ModStaticHelper.Logger.LogError("------------------------");
-                ModStaticHelper.Logger.LogInfo($"TurnTowardsLaserBeamIfHasLOS Distance TURRET FIRING");
-                ModStaticHelper.Logger.LogInfo($"turret.id {turret.NetworkObjectId}");
-                ModStaticHelper.Logger.LogInfo($"turret.turretActive: {turret.turretActive}, laserBeamObject.state: {laserPointerRaycast.state}");
-                ModStaticHelper.Logger.LogInfo($"laserBeamObject.GetHashCode(): {laserPointerRaycast.GetHashCode()}");
-                ModStaticHelper.Logger.LogError("------------------------");
                 Networking.Instance.TurnTowardsLaserBeamIfHasLOSServerRpc(turret.NetworkObjectId, laserPointerRaycast.GetHashCode());
 
                 PrevUsedTurret = turret;

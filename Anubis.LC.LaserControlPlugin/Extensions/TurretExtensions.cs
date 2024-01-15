@@ -30,23 +30,22 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
             // Calculate the position where the light beam ends
             Vector3 endPosition = GetEndPositionOfBeam(laserBeamObject.light);
 
-            if (Vector3.Distance(turret.transform.position, endPosition) <= beamDistance)
+            if (Vector3.Distance(turret.transform.position, endPosition) > beamDistance)
             {
-                if (turret.turretActive == true && laserBeamObject.state)
-                {
-                    Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Firing);
-                    turret.tempTransform.position = endPosition;
-                    turret.turnTowardsObjectCompass.LookAt(turret.tempTransform);
-                }
-                else
-                {
-                    Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
-                    Networking.Instance.StopTurretFireVisualServerRpc(turret.NetworkObjectId);
-                }
+                Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
+                return;
+            }
+
+            if (turret.turretActive == true && laserBeamObject.state)
+            {
+                Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Firing);
+                turret.tempTransform.position = endPosition;
+                turret.turnTowardsObjectCompass.LookAt(turret.tempTransform);
             }
             else
             {
                 Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
+                Networking.Instance.StopTurretFireVisualServerRpc(turret.NetworkObjectId);
             }
         }
     }
