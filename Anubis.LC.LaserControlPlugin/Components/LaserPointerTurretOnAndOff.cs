@@ -2,7 +2,7 @@
 
 namespace Anubis.LC.LaserControlPlugin.Components
 {
-    public class LaserPointerRaycast : MonoBehaviour
+    public class LaserPointerTurretOnAndOff : MonoBehaviour
     {
         private FlashlightItem? item;
 
@@ -33,6 +33,16 @@ namespace Anubis.LC.LaserControlPlugin.Components
         public void Awake()
         {
             item = GetComponent<FlashlightItem>();
+        }
+
+        public void Update()
+        {
+            if (!state || LaserPointerTargetTurret.Count <= 0) return;
+
+            foreach (LaserPointerTargetTurret instance in LaserPointerTargetTurret.Instances)
+            {
+                instance.ToggleTurretByTemp(light.transform, item);
+            }
         }
     }
 }

@@ -3,11 +3,13 @@ using HarmonyLib;
 using Anubis.LC.LaserControlPlugin.Helpers;
 using Anubis.LC.LaserControlPlugin.ModNetwork;
 using RuntimeNetcodeRPCValidator;
+using Anubis.LC.LaserControlPlugin.Store;
 
 namespace Anubis.LC.LaserControlPlugin
 {
     [BepInPlugin(ModStaticHelper.modGUID, ModStaticHelper.modName, ModStaticHelper.modVersion)]
     [BepInDependency(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION)]
+    [BepInDependency("ainavt.lc.lethalconfig")]
     public class LaserControlPlugin : BaseUnityPlugin
     {
         private Harmony HarmonyInstance = new Harmony(ModStaticHelper.modGUID);
@@ -25,12 +27,14 @@ namespace Anubis.LC.LaserControlPlugin
             netcodeValidator = new NetcodeValidator(ModStaticHelper.modGUID);
             netcodeValidator.PatchAll();
 
-            netcodeValidator.BindToPreExistingObjectByBehaviour<PluginNetworkingInstance, Turret>();
+            netcodeValidator.BindToPreExistingObjectByBehaviour<Networking, Turret>();
 
             ModStaticHelper.Logger.LogInfo($"{ModStaticHelper.modGUID} is loading...");
 
             ModStaticHelper.Logger.LogInfo($"Installing patches");
             HarmonyInstance.PatchAll(typeof(LaserControlPlugin).Assembly);
+
+            LethalConfigHelper.SetLehalConfig(Config);
 
             DontDestroyOnLoad(this);
 

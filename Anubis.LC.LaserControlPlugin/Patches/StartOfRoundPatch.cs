@@ -1,6 +1,9 @@
 ﻿using Anubis.LC.LaserControlPlugin.Components;
+using Anubis.LC.LaserControlPlugin.Helpers;
+using Anubis.LC.LaserControlPlugin.Store;
 using HarmonyLib;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Anubis.LC.LaserControlPlugin.Patches
 {
@@ -11,21 +14,18 @@ namespace Anubis.LC.LaserControlPlugin.Patches
         [HarmonyPostfix]
         public static void Awake(StartOfRound __instance)
         {
-            AllItemsList allItemsList = __instance.allItemsList;
-            if (allItemsList == null)
+            var item = StartOfRound.Instance.allItemsList?.itemsList?.FirstOrDefault(itm => itm.spawnPrefab && itm.spawnPrefab.name == "LaserPointer");
+            if (item != null)
             {
-                return;
+                if (item.spawnPrefab.GetComponent<LaserPointerTurretOnAndOff>() == null)
+                {
+                    item.spawnPrefab.AddComponent<LaserPointerTurretOnAndOff>();
+                }
             }
 
-            List<Item> itemsList = allItemsList.itemsList;
-            if (itemsList != null)
+            if (LethalConfigHelper.IsPointerPurchasable.Value)
             {
-                Item item = itemsList.Find(itm => itm.spawnPrefab && itm.spawnPrefab.name == "LaserPointer");
-                if (item == null || item.spawnPrefab == null)
-                {
-                    return;
-                }
-                item.spawnPrefab.AddComponent<LaserPointerRaycast>();
+                BuyableLaserPointer.RegisterShopItem();
             }
         }
     }

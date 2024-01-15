@@ -6,40 +6,47 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
 {
     public static class TurretExtensions
     {
+        // Assuming a distance of 10 units for the light beam
+        private static readonly float beamDistance = 25f;
+
+        private static Vector3 GetEndPositionOfBeam(Light light)
+        {
+            // Get the direction of the light beam
+            Vector3 lightDirection = light.transform.forward;
+
+            // Assuming the light is located at the position of the GameObject
+            Vector3 lightPosition = light.transform.position;
+
+            // Calculate the position where the light beam ends
+            Vector3 endPosition = lightPosition + lightDirection * beamDistance;
+
+            return endPosition;
+        }
+
         public static void TurnTowardsLaserBeamIfHasLOS(this Turret turret, LaserPointerRaycast laserBeamObject)
         {
             if (laserBeamObject == null || laserBeamObject?.light == null) return;
 
-            // Get the direction of the light beam
-            Vector3 lightDirection = laserBeamObject.light.transform.forward;
-
-            // Assuming the light is located at the position of the GameObject
-            Vector3 lightPosition = laserBeamObject.light.transform.position;
-
-            // Assuming a distance of 10 units for the light beam
-            float beamDistance = 25f;
-
             // Calculate the position where the light beam ends
-            Vector3 endPosition = lightPosition + lightDirection * beamDistance;
+            Vector3 endPosition = GetEndPositionOfBeam(laserBeamObject.light);
 
             if (Vector3.Distance(turret.transform.position, endPosition) <= beamDistance)
             {
                 if (turret.turretActive == true && laserBeamObject.state)
                 {
-                    PluginNetworkingInstance.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Firing);
+                    Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Firing);
                     turret.tempTransform.position = endPosition;
                     turret.turnTowardsObjectCompass.LookAt(turret.tempTransform);
                 }
                 else
                 {
-                    PluginNetworkingInstance.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
-                    PluginNetworkingInstance.Instance.StopTurretFireVisualServerRpc(turret.NetworkObjectId);
-                    turret.turretMode = TurretMode.Detection;
+                    Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
+                    Networking.Instance.StopTurretFireVisualServerRpc(turret.NetworkObjectId);
                 }
             }
             else
             {
-                PluginNetworkingInstance.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
+                Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
             }
         }
     }

@@ -6,7 +6,7 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
     {
         public const string modGUID = "Anubis.LaserControl";
         public const string modName = "LaserControl";
-        public const string modVersion = "0.0.2";
+        public const string modVersion = "0.1.0";
 
         public static ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(modGUID);
     }
