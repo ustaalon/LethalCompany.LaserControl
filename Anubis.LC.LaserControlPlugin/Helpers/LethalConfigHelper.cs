@@ -1,11 +1,8 @@
 ﻿using BepInEx.Configuration;
 using LethalConfig.ConfigItems;
 using LethalConfig;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using UnityEngine;
 
 namespace Anubis.LC.LaserControlPlugin.Helpers
@@ -14,16 +11,19 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
     {
         public static ConfigEntry<bool> IsPointerBuyable;
         public static ConfigEntry<bool> IsPointerCanTurnOnAndOffTurrets;
+        //public static ConfigEntry<bool> IsPointerCanControlTurrets;
         public static ConfigEntry<bool> IsBeta;
 
         public static void SetLehalConfig(ConfigFile config)
         {
             IsPointerBuyable = config.Bind("General", "Pointer Laser Buyable?", true, "The pointer laser is buyable (no scrap worth)");
             IsPointerCanTurnOnAndOffTurrets = config.Bind("General", "Can Turn On/Off Turrets?", true, "The laser pointer can turn off and on turrets");
+            //IsPointerCanControlTurrets = config.Bind("General", "Can Control Turrets?", true, "The laser pointer can control turrets");
             IsBeta = config.Bind("General", "Use Experimental Settings", false, "Use new features and logics");
 
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerBuyable, true));
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanTurnOnAndOffTurrets, true));
+            //LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanControlTurrets, true));
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsBeta, true));
 
             LethalConfigManager.SetModIcon(LoadNewSprite(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "icon.png")));

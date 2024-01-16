@@ -25,6 +25,7 @@ Please consider support by [this link](https://ko-fi.com/ustaalon). It will help
 
 ## Roadmap
 - Making sure everything related to the turret is stable
+- Make sure its working with other mods
 - Making the laser pointer do more cool stuff
 
 ## Additional Credits

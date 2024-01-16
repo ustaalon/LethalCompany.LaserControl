@@ -6,7 +6,7 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
     {
         public static void UseLaserPointerItemBatteries(this FlashlightItem flashlightItem)
         {
-            flashlightItem.insertedBattery.charge -= Time.deltaTime / 15f;
+            flashlightItem.insertedBattery.charge -= Time.deltaTime / 30f;
         }
     }
 }
