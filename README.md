@@ -1,5 +1,5 @@
 # Laser Control
-Binding the laser pointer to the turret. What bad things could happen? (Still in developing)
+Binding the laser pointer to the turret. What bad things could happen?
 
 ## How To Use?
 1. Find or buy pointer laser
@@ -25,18 +25,17 @@ Please consider support by [this link](https://ko-fi.com/ustaalon). It will help
 
 ## Roadmap
 - Making sure everything related to the turret is stable
-- Add LethalConfig for configuration
 - Making the laser pointer do more cool stuff
 
 ## Additional Credits
 - Theme_Light for the idea to create this mod and for the mod avatar
 - [KingNejjie](https://www.youtube.com/@KingNejjie) for helping me testing the mod
+- Thanks to Unique Albino (DamonB), Miss Scarlett and Azim for helping me troubleshoot
 
 # Release Notes
 ### 0.1.0
 - Added LethalConfig
 - Turret control by pointer laser is now under "experimental" configuration (you need to configure it)
-- Turret can be turn off for few seconds by using the laser pointer
 - Laser pointer is now buyable (not scrap) for 50 credits
 
 ### 0.0.2
