@@ -1,6 +1,4 @@
-﻿using Anubis.LC.LaserControlPlugin.ModNetwork;
-using UnityEngine;
-using Object = UnityEngine.Object;
+﻿using UnityEngine;
 
 namespace Anubis.LC.LaserControlPlugin.Extensions
 {
@@ -8,7 +6,7 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
     {
         public static void UseLaserPointerItemBatteries(this FlashlightItem flashlightItem)
         {
-            flashlightItem.insertedBattery.charge -= Time.deltaTime / 0.1f;
+            flashlightItem.insertedBattery.charge -= Time.deltaTime / 15f;
         }
     }
 }

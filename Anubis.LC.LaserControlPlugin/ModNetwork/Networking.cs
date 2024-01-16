@@ -116,7 +116,10 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         public void SwitchTurretModeServerRpc(ulong networkObjectId, TurretMode turretMode)
         {
             if (!currentTurretsAsDict.ContainsKey(networkObjectId)) return;
-            StopTurretFireVisualServerRpc(networkObjectId);
+            if (turretMode == TurretMode.Firing)
+            {
+                StopTurretFireVisualServerRpc(networkObjectId);
+            }
             SwitchTurretModeClientRpc(networkObjectId, turretMode);
         }
 
