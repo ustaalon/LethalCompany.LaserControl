@@ -26,7 +26,7 @@ namespace Anubis.LC.LaserControlPlugin
             netcodeValidator = new NetcodeValidator(ModStaticHelper.modGUID);
             netcodeValidator.PatchAll();
 
-            netcodeValidator.BindToPreExistingObjectByBehaviour<Networking, Turret>();
+            netcodeValidator.BindToPreExistingObjectByBehaviour<Networking, Terminal>();
 
             ModStaticHelper.Logger.LogInfo($"{ModStaticHelper.modGUID} is loading...");
 

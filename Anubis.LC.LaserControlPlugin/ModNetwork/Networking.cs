@@ -65,27 +65,26 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         public Turret GetNearestTurret()
         {
             Transform localPlayerTransform = StartOfRound.Instance.localPlayerController.transform;
-
             Turret[] turretArray = GetAllTurrets();
-            Vector3 forward = Quaternion.Euler(0f, maxDistance / 2f, 0f) * localPlayerTransform.forward;
+            //Vector3 forward = Quaternion.Euler(0f, maxDistance, 0f) * localPlayerTransform.forward;
 
             // Check for turret in LOS
-            foreach (Turret turret in turretArray)
-            {
-                if (Vector3.Distance(turret.transform.position, localPlayerTransform.position) > maxDistance) continue;
+            //foreach (Turret turret in turretArray)
+            //{
+            //    if (Vector3.Distance(turret.transform.position, localPlayerTransform.position) > maxDistance) continue;
 
-                Ray shootRay = new Ray(localPlayerTransform.position, forward);
+            //    Ray shootRay = new Ray(localPlayerTransform.position, forward);
 
-                if (Physics.Raycast(shootRay, out RaycastHit hit, maxDistance, 1051400, QueryTriggerInteraction.Ignore))
-                {
-                    if (hit.transform.CompareTag(turretArray[0].tag))
-                    {
-                        return turret;
-                    }
-                }
-            }
+            //    if (Physics.Raycast(shootRay, out RaycastHit hit, maxDistance, 1051400, QueryTriggerInteraction.Ignore))
+            //    {
+            //        if (hit.transform.CompareTag(turretArray[0].tag))
+            //        {
+            //            return turret;
+            //        }
+            //    }
+            //}
 
-            // If turret in LOS is null, just find the closest one
+            // If turret not in LOS, just find the closest one
             return turretArray
             .Where(turret => Vector3.Distance(turret.transform.position, localPlayerTransform.position) <= minDistance)
             .OrderBy(turret => Vector3.Distance(turret.transform.position, localPlayerTransform.position))
@@ -117,7 +116,7 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         public void SwitchTurretModeServerRpc(ulong networkObjectId, TurretMode turretMode)
         {
             if (!currentTurretsAsDict.ContainsKey(networkObjectId)) return;
-
+            StopTurretFireVisualServerRpc(networkObjectId);
             SwitchTurretModeClientRpc(networkObjectId, turretMode);
         }
 
@@ -167,10 +166,6 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
 
             ModStaticHelper.Logger.LogWarning("---- START SYNC RAYCAST ----");
             LaserPointerRaycast[] laserPointerRaycasts = FindAllLaserPointerRaycasts();
-            foreach (var laser in laserPointerRaycasts)
-            {
-                ModStaticHelper.Logger.LogInfo($"Laser pointer ID: {laser.GetHashCode()}");
-            }
             currentLaserPointerRaycast = laserPointerRaycasts;
             currentLaserPointerRaycastAsDict = laserPointerRaycasts.ToDictionary(t => t.GetHashCode());
             ModStaticHelper.Logger.LogWarning("---- END SYNC RAYCAST ----");

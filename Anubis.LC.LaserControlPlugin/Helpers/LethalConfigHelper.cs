@@ -22,9 +22,9 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
             IsPointerCanTurnOnAndOffTurrets = config.Bind("General", "Can Turn On/Off Turrets?", true, "The laser pointer can turn off and on turrets");
             IsBeta = config.Bind("General", "Use Experimental Settings", false, "Use new features and logics");
 
-            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerBuyable, false));
-            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanTurnOnAndOffTurrets, false));
-            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsBeta, false));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerBuyable, true));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanTurnOnAndOffTurrets, true));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsBeta, true));
 
             LethalConfigManager.SetModIcon(LoadNewSprite(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "icon.png")));
             LethalConfigManager.SetModDescription("Binding the laser pointer to the turret. What bad things could happen?");

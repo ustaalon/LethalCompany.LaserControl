@@ -3,7 +3,6 @@ using Anubis.LC.LaserControlPlugin.Extensions;
 using Anubis.LC.LaserControlPlugin.Helpers;
 using Anubis.LC.LaserControlPlugin.ModNetwork;
 using HarmonyLib;
-using Unity;
 using UnityEngine;
 
 namespace Anubis.LC.LaserControlPlugin.Patches
@@ -19,6 +18,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
         private static void ItemActivate(FlashlightItem __instance, bool used, bool buttonDown = true)
         {
             if (!__instance.name.Contains(LASER_PROP_NAME) || !LethalConfigHelper.IsBeta.Value) return;
+
             if (__instance.gameObject.GetComponent<LaserPointerRaycast>() == null)
             {
                 __instance.gameObject.AddComponent<LaserPointerRaycast>();
@@ -26,7 +26,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
             else
             {
                 LaserPointerRaycast laserPointerRaycast = __instance.GetComponent<LaserPointerRaycast>();
-                if (!laserPointerRaycast.state)
+                if (laserPointerRaycast && !laserPointerRaycast.state)
                 {
                     Object.Destroy(laserPointerRaycast);
                 }
@@ -53,7 +53,6 @@ namespace Anubis.LC.LaserControlPlugin.Patches
                 if (PrevUsedTurret && PrevUsedTurret?.NetworkObjectId != turret.NetworkObjectId)
                 {
                     Networking.Instance.SwitchTurretModeServerRpc(PrevUsedTurret.NetworkObjectId, TurretMode.Detection);
-                    Networking.Instance.StopTurretFireVisualServerRpc(PrevUsedTurret.NetworkObjectId);
                 }
                 Networking.Instance.TurnTowardsLaserBeamIfHasLOSServerRpc(turret.NetworkObjectId, laserPointerRaycast.GetHashCode());
 

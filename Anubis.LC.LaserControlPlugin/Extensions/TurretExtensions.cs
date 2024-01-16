@@ -32,7 +32,10 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
 
             if (Vector3.Distance(turret.transform.position, endPosition) > beamDistance)
             {
-                Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
+                if (turret.turretMode != TurretMode.Detection)
+                {
+                    Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
+                }
                 return;
             }
 
@@ -44,8 +47,10 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
             }
             else
             {
-                Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
-                Networking.Instance.StopTurretFireVisualServerRpc(turret.NetworkObjectId);
+                if (turret.turretMode != TurretMode.Detection)
+                {
+                    Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
+                }
             }
         }
     }
