@@ -1,5 +1,6 @@
 ﻿using Anubis.LC.LaserControlPlugin.Extensions;
 using Anubis.LC.LaserControlPlugin.Helpers;
+using Anubis.LC.LaserControlPlugin.ModNetwork;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -61,7 +62,7 @@ namespace Anubis.LC.LaserControlPlugin.Components
             IsStartedCorouting = true;
             triggered = true;
             turret.ToggleTurretEnabled(false);
-            turret.SetToModeClientRpc((int)TurretMode.Detection);
+            Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
             yield return new WaitForSeconds(seconds);
             turret.ToggleTurretEnabled(true);
             ModStaticHelper.Logger.LogError("-----------------");

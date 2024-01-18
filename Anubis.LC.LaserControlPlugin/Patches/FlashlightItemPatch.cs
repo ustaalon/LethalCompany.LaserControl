@@ -22,13 +22,14 @@ namespace Anubis.LC.LaserControlPlugin.Patches
             if (__instance.gameObject.GetComponent<LaserPointerRaycast>() == null)
             {
                 __instance.gameObject.AddComponent<LaserPointerRaycast>();
+                FlashlightItemExtensions.LaserPointerRaycastCurrentInstance = __instance.GetComponent<LaserPointerRaycast>();
             }
             else
             {
-                LaserPointerRaycast laserPointerRaycast = __instance.GetComponent<LaserPointerRaycast>();
-                if (laserPointerRaycast && !laserPointerRaycast.state)
+                FlashlightItemExtensions.LaserPointerRaycastCurrentInstance = __instance.GetComponent<LaserPointerRaycast>();
+                if (FlashlightItemExtensions.LaserPointerRaycastCurrentInstance && !FlashlightItemExtensions.LaserPointerRaycastCurrentInstance.state)
                 {
-                    Object.Destroy(laserPointerRaycast);
+                    Object.Destroy(FlashlightItemExtensions.LaserPointerRaycastCurrentInstance);
                 }
             }
             Networking.Instance.SyncAllTurretsAndRaycastsServerRpc();
@@ -42,6 +43,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
 
             LaserPointerRaycast laserPointerRaycast = __instance.GetComponent<LaserPointerRaycast>();
             if (!laserPointerRaycast) return;
+            if (__instance.DestroyIfBatteryIsEmpty()) return;
 
             if (laserPointerRaycast.state)
             {
@@ -50,8 +52,9 @@ namespace Anubis.LC.LaserControlPlugin.Patches
 
                 __instance.UseLaserPointerItemBatteries();
 
-                if (PrevUsedTurret && PrevUsedTurret?.NetworkObjectId != turret.NetworkObjectId)
+                if (PrevUsedTurret && PrevUsedTurret?.NetworkObjectId != turret.NetworkObjectId && PrevUsedTurret?.turretMode != TurretMode.Detection)
                 {
+                    ModStaticHelper.Logger.LogInfo("Previous turret no longer in player control, stop firing (ON)");
                     Networking.Instance.SwitchTurretModeServerRpc(PrevUsedTurret.NetworkObjectId, TurretMode.Detection);
                 }
                 Networking.Instance.TurnTowardsLaserBeamIfHasLOSServerRpc(turret.NetworkObjectId, laserPointerRaycast.GetHashCode());
@@ -61,7 +64,11 @@ namespace Anubis.LC.LaserControlPlugin.Patches
 
             if (!laserPointerRaycast.state && PrevUsedTurret != null)
             {
-                Networking.Instance.SwitchTurretModeServerRpc(PrevUsedTurret.NetworkObjectId, TurretMode.Detection);
+                if (PrevUsedTurret.turretMode != TurretMode.Detection)
+                {
+                    ModStaticHelper.Logger.LogInfo("Previous turret no longer in player control, stop firing (OFF)");
+                    Networking.Instance.SwitchTurretModeServerRpc(PrevUsedTurret.NetworkObjectId, TurretMode.Detection);
+                }
                 PrevUsedTurret = null;
             }
         }

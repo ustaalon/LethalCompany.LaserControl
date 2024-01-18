@@ -1,4 +1,5 @@
 ﻿using Anubis.LC.LaserControlPlugin.Components;
+using Anubis.LC.LaserControlPlugin.Helpers;
 using Anubis.LC.LaserControlPlugin.ModNetwork;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
     public static class TurretExtensions
     {
         // Assuming a distance of 10 units for the light beam
-        private static readonly float beamDistance = 25f;
+        private static readonly float beamDistance = 35f;
 
         private static Vector3 GetEndPositionOfBeam(Light light)
         {
@@ -30,18 +31,11 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
             // Calculate the position where the light beam ends
             Vector3 endPosition = GetEndPositionOfBeam(laserBeamObject.light);
 
-            if (Vector3.Distance(turret.transform.position, endPosition) > beamDistance)
+            if (turret.turretActive == true && laserBeamObject.state && Vector3.Distance(turret.transform.position, endPosition) <= beamDistance)
             {
-                if (turret.turretMode != TurretMode.Detection)
-                {
-                    Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
-                }
-                return;
-            }
-
-            if (turret.turretActive == true && laserBeamObject.state)
-            {
+                ModStaticHelper.Logger.LogInfo("Turret firing by player control");
                 Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Firing);
+                turret.targetTransform = laserBeamObject.light.transform;
                 turret.tempTransform.position = endPosition;
                 turret.turnTowardsObjectCompass.LookAt(turret.tempTransform);
             }
@@ -49,6 +43,8 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
             {
                 if (turret.turretMode != TurretMode.Detection)
                 {
+                    turret.targetTransform = null;
+                    ModStaticHelper.Logger.LogInfo("Turret no longer in player control, stop firing");
                     Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
                 }
             }

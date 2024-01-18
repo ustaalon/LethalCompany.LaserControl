@@ -21,7 +21,7 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         private Dictionary<int, LaserPointerRaycast> currentLaserPointerRaycastAsDict = new Dictionary<int, LaserPointerRaycast>();
 
         private readonly float maxDistance = 35f;
-        private readonly float minDistance = 20f;
+        private readonly float minDistance = 25f;
 
         public Dictionary<int, LaserPointerRaycast> GetAllLaserPointerRaycastsAsDict()
         {
@@ -94,8 +94,6 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         [ServerRpc(RequireOwnership = false)]
         public void StopTurretFireVisualServerRpc(ulong networkObjectId)
         {
-            if (!currentTurretsAsDict.ContainsKey(networkObjectId)) return;
-
             StopTurretFireVisualClientRpc(networkObjectId);
         }
 
@@ -104,18 +102,21 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         {
             if (GetAllTurretsAsDict().TryGetValue(networkObjectId, out Turret turret))
             {
-                turret.mainAudio.Stop();
-                turret.farAudio.Stop();
-                turret.berserkAudio.Stop();
-                turret.bulletParticles.Stop(withChildren: true, ParticleSystemStopBehavior.StopEmitting);
-                turret.turretAnimator.SetInteger("TurretMode", 0);
+                if (turret.turretMode == TurretMode.Firing)
+                {
+                    turret.mainAudio.Stop();
+                    turret.farAudio.Stop();
+                    turret.berserkAudio.Stop();
+                    turret.bulletCollisionAudio.Stop();
+                    turret.bulletParticles.Stop(withChildren: true, ParticleSystemStopBehavior.StopEmitting);
+                    turret.turretAnimator.SetInteger("TurretMode", 0);
+                }
             }
         }
 
         [ServerRpc(RequireOwnership = false)]
         public void SwitchTurretModeServerRpc(ulong networkObjectId, TurretMode turretMode)
         {
-            if (!currentTurretsAsDict.ContainsKey(networkObjectId)) return;
             if (turretMode == TurretMode.Detection)
             {
                 StopTurretFireVisualServerRpc(networkObjectId);
@@ -129,17 +130,14 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
             if (GetAllTurretsAsDict().TryGetValue(networkObjectId, out Turret turret))
             {
                 turret.turretMode = turretMode;
+                turret.SetToModeClientRpc((int)turretMode);
             }
         }
 
         [ServerRpc(RequireOwnership = false)]
         public void TurnTowardsLaserBeamIfHasLOSServerRpc(ulong networkObjectId, int laserPointerRaycastId)
         {
-            if (GetAllTurretsAsDict().TryGetValue(networkObjectId, out Turret turret) &&
-                GetAllLaserPointerRaycastsAsDict().TryGetValue(laserPointerRaycastId, out LaserPointerRaycast laserPointerRaycast))
-            {
-                TurnTowardsLaserBeamIfHasLOSClientRpc(networkObjectId, laserPointerRaycastId);
-            }
+            TurnTowardsLaserBeamIfHasLOSClientRpc(networkObjectId, laserPointerRaycastId);
         }
 
         [ClientRpc]
@@ -152,7 +150,7 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
             }
         }
 
-        [ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         public void SyncAllTurretsAndRaycastsServerRpc()
         {
             SyncAllTurretsAndRaycastsClientRpc();
@@ -161,17 +159,15 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         [ClientRpc]
         public void SyncAllTurretsAndRaycastsClientRpc()
         {
-            ModStaticHelper.Logger.LogWarning("---- START SYNC TURRET ----");
+            ModStaticHelper.Logger.LogWarning("---- START SYNC TURRET AND LASER POINTERS ----");
             Turret[] turrets = FindAllTurrets();
             currentTurrets = turrets;
             currentTurretsAsDict = turrets.ToDictionary(t => t.NetworkObjectId);
-            ModStaticHelper.Logger.LogWarning("---- END SYNC TURRET ----");
 
-            ModStaticHelper.Logger.LogWarning("---- START SYNC RAYCAST ----");
             LaserPointerRaycast[] laserPointerRaycasts = FindAllLaserPointerRaycasts();
             currentLaserPointerRaycast = laserPointerRaycasts;
             currentLaserPointerRaycastAsDict = laserPointerRaycasts.ToDictionary(t => t.GetHashCode());
-            ModStaticHelper.Logger.LogWarning("---- END SYNC RAYCAST ----");
+            ModStaticHelper.Logger.LogWarning("---- END SYNC TURRET AND LASER POINTERS ----");
         }
 
         private void Awake()
@@ -180,8 +176,7 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
             {
                 Instance = this;
 
-                if (!IsHost) // Any clients should ask for sync of something :shrug:
-                    StartCoroutine(WaitForSomeTime());
+                StartCoroutine(WaitForSomeTime());
             }
         }
 
@@ -189,8 +184,6 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         {
             // We need to wait because sending an RPC before a NetworkObject is spawned results in errors.
             yield return new WaitUntil(() => NetworkObject.IsSpawned);
-
-            // Tell all clients to run this method.
             SyncAllTurretsAndRaycastsServerRpc();
         }
     }
