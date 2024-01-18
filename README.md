@@ -34,6 +34,10 @@ Please consider support by [this link](https://ko-fi.com/ustaalon). It will help
 - Thanks to Unique Albino (DamonB), Miss Scarlett and Azim for helping me troubleshoot
 
 # Release Notes
+### 0.1.1
+- Minor turret bugs issues fix
+- Networking and sync adjustments between players
+
 ### 0.1.0
 - Added LethalConfig
 - Turret control by pointer laser is now under "experimental" configuration (you need to configure it)

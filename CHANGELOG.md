@@ -1,3 +1,7 @@
+### 0.1.1
+- Minor turret bugs issues fix
+- Networking and sync adjustments between players
+
 ### 0.1.0
 - Added LethalConfig
 - Turret control by pointer laser is now under "experimental" configuration (you need to configure it)
