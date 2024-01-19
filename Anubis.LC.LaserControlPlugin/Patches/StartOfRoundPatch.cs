@@ -14,17 +14,11 @@ namespace Anubis.LC.LaserControlPlugin.Patches
         [HarmonyPostfix]
         public static void Awake(StartOfRound __instance)
         {
-            if (LethalConfigHelper.IsPointerCanTurnOnAndOffTurrets.Value)
+            var item = StartOfRound.Instance.allItemsList?.itemsList?.FirstOrDefault(itm => itm.spawnPrefab && itm.spawnPrefab.name == "LaserPointer");
+            if (item != null)
             {
-                var item = StartOfRound.Instance.allItemsList?.itemsList?.FirstOrDefault(itm => itm.spawnPrefab && itm.spawnPrefab.name == "LaserPointer");
-                if (item != null)
-                {
-                    if (item.spawnPrefab.GetComponent<LaserPointerTurretOnAndOff>() == null)
-                    {
-                        ModStaticHelper.Logger.LogInfo("Added LaserPointerTurretOnAndOff to bind turret and laser pointer");
-                        item.spawnPrefab.AddComponent<LaserPointerTurretOnAndOff>();
-                    }
-                }
+                ModStaticHelper.Logger.LogInfo("Added LaserPointerTurretOnAndOff to bind turrets and/or landmines and laser pointer");
+                item.spawnPrefab.AddComponent<LaserPointerRaycastTarget>();
             }
 
             if (LethalConfigHelper.IsPointerBuyable.Value)

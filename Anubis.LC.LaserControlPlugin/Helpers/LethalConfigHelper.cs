@@ -11,6 +11,7 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
     {
         public static ConfigEntry<bool> IsPointerBuyable;
         public static ConfigEntry<bool> IsPointerCanTurnOnAndOffTurrets;
+        public static ConfigEntry<bool> IsPointerCanDetonateLandmines;
         //public static ConfigEntry<bool> IsPointerCanControlTurrets;
         public static ConfigEntry<bool> IsBeta;
 
@@ -18,11 +19,13 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
         {
             IsPointerBuyable = config.Bind("General", "Pointer Laser Buyable?", true, "The pointer laser is buyable (no scrap worth)");
             IsPointerCanTurnOnAndOffTurrets = config.Bind("General", "Can Turn On/Off Turrets?", true, "The laser pointer can turn off and on turrets");
+            IsPointerCanDetonateLandmines = config.Bind("General", "Can Detonate Landmines?", true, "The laser pointer can detonate landmines");
             //IsPointerCanControlTurrets = config.Bind("General", "Can Control Turrets?", true, "The laser pointer can control turrets");
             IsBeta = config.Bind("General", "Use Experimental Settings", false, "Use new features and logics");
 
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerBuyable, true));
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanTurnOnAndOffTurrets, true));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanDetonateLandmines, true));
             //LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanControlTurrets, true));
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsBeta, true));
 

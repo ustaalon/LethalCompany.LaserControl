@@ -2,44 +2,28 @@
 using Anubis.LC.LaserControlPlugin.Helpers;
 using Anubis.LC.LaserControlPlugin.ModNetwork;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Anubis.LC.LaserControlPlugin.Components
 {
-    public class LaserPointerTargetTurret : MonoBehaviour
+    public class LaserPointerTargetTurret : LaserPointerTarget
     {
-        public static List<LaserPointerTargetTurret> Instances = new List<LaserPointerTargetTurret>();
-        public static int Count => Instances.Count;
-
         private readonly float radius = 1f;
         private readonly float maxTemp = 0.3f;
-        private readonly float timerMaxCounting = 3f;
-
-        private float tempCounter;
-
         private bool IsStartedCorouting = false;
-        private bool triggered = false;
 
-        private Turret? turret;
+        protected Turret? target;
 
-        private Vector3 offset = Vector3.up * 0.1f;
-        private Vector3 hitPoint;
-
-        private void Awake()
+        protected new void Awake()
         {
-            turret = GetComponent<Turret>();
-            Instances.Add(this);
+            base.Awake();
+            target = GetComponent<Turret>();
         }
 
-        private void OnDestroy()
+        public override void Warmup(Transform origin, FlashlightItem laserPointer)
         {
-            Instances.Remove(this);
-        }
-
-        public void ToggleTurretByTemp(Transform origin, FlashlightItem laserPointer)
-        {
-            if (!turret) return;
+            if (!LethalConfigHelper.IsPointerCanTurnOnAndOffTurrets.Value) return;
+            if (!target) return;
 
             if (!triggered && HasCollision(origin.position, origin.forward, transform.position + offset, radius)
                  && !Physics.Linecast(origin.position, hitPoint, 1051400, QueryTriggerInteraction.Ignore))
@@ -49,12 +33,12 @@ namespace Anubis.LC.LaserControlPlugin.Components
 
                 if (tempCounter >= maxTemp && !IsStartedCorouting)
                 {
-                    StartCoroutine(TurnOffAndOnTurret(turret, timerMaxCounting));
+                    StartCoroutine(TurnOffAndOnTurret(target));
                 }
             }
         }
 
-        private IEnumerator TurnOffAndOnTurret(Turret turret, float seconds = 5f)
+        private IEnumerator TurnOffAndOnTurret(Turret turret)
         {
             ModStaticHelper.Logger.LogError("-----------------");
             ModStaticHelper.Logger.LogInfo($"Turret Temp High -> OFF");
@@ -63,7 +47,7 @@ namespace Anubis.LC.LaserControlPlugin.Components
             triggered = true;
             turret.ToggleTurretEnabled(false);
             Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
-            yield return new WaitForSeconds(seconds);
+            yield return new WaitForSeconds(3);
             turret.ToggleTurretEnabled(true);
             ModStaticHelper.Logger.LogError("-----------------");
             ModStaticHelper.Logger.LogInfo($"Turret Temp High -> ON");
@@ -71,17 +55,6 @@ namespace Anubis.LC.LaserControlPlugin.Components
             tempCounter = 0f;
             triggered = false;
             IsStartedCorouting = false;
-        }
-
-        private bool HasCollision(Vector3 point, Vector3 direction, Vector3 center, float radius = 1f)
-        {
-            float num = Vector3.Dot(center - point, Vector3.up) / Vector3.Dot(direction, Vector3.up);
-            hitPoint = point + direction * num;
-            if (num > 0f)
-            {
-                return Vector3.Distance(center, hitPoint) <= radius;
-            }
-            return false;
         }
     }
 }
