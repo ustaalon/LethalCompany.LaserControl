@@ -104,6 +104,8 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
             {
                 if (turret.turretMode == TurretMode.Firing)
                 {
+                    turret.hasLineOfSight = false;
+                    turret.lostLOSTimer = 0f;
                     turret.mainAudio.Stop();
                     turret.farAudio.Stop();
                     turret.berserkAudio.Stop();
@@ -130,6 +132,7 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
             if (GetAllTurretsAsDict().TryGetValue(networkObjectId, out Turret turret))
             {
                 turret.turretMode = turretMode;
+                turret.SwitchTurretMode((int)turretMode);
                 turret.SetToModeClientRpc((int)turretMode);
             }
         }

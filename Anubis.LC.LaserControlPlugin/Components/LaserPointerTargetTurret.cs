@@ -40,18 +40,9 @@ namespace Anubis.LC.LaserControlPlugin.Components
 
         private IEnumerator TurnOffAndOnTurret(Turret turret)
         {
-            ModStaticHelper.Logger.LogError("-----------------");
-            ModStaticHelper.Logger.LogInfo($"Turret Temp High -> OFF");
-            ModStaticHelper.Logger.LogError("-----------------");
             IsStartedCorouting = true;
             triggered = true;
-            turret.ToggleTurretEnabled(false);
-            Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
-            yield return new WaitForSeconds(3);
-            turret.ToggleTurretEnabled(true);
-            ModStaticHelper.Logger.LogError("-----------------");
-            ModStaticHelper.Logger.LogInfo($"Turret Temp High -> ON");
-            ModStaticHelper.Logger.LogError("-----------------");
+            yield return turret.TurnOffAndOnTurret();
             tempCounter = 0f;
             triggered = false;
             IsStartedCorouting = false;

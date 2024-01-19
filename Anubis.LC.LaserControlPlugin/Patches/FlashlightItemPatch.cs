@@ -4,6 +4,7 @@ using Anubis.LC.LaserControlPlugin.Helpers;
 using Anubis.LC.LaserControlPlugin.ModNetwork;
 using HarmonyLib;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 namespace Anubis.LC.LaserControlPlugin.Patches
 {
@@ -43,7 +44,6 @@ namespace Anubis.LC.LaserControlPlugin.Patches
 
             LaserPointerRaycast laserPointerRaycast = __instance.GetComponent<LaserPointerRaycast>();
             if (!laserPointerRaycast) return;
-            if (__instance.DestroyIfBatteryIsEmpty()) return;
 
             if (laserPointerRaycast.state)
             {
@@ -60,6 +60,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
                 Networking.Instance.TurnTowardsLaserBeamIfHasLOSServerRpc(turret.NetworkObjectId, laserPointerRaycast.GetHashCode());
 
                 PrevUsedTurret = turret;
+                __instance.DestroyIfBatteryIsEmpty(turret);
             }
 
             if (!laserPointerRaycast.state && PrevUsedTurret != null)
@@ -69,6 +70,8 @@ namespace Anubis.LC.LaserControlPlugin.Patches
                     ModStaticHelper.Logger.LogInfo("Previous turret no longer in player control, stop firing (OFF)");
                     Networking.Instance.SwitchTurretModeServerRpc(PrevUsedTurret.NetworkObjectId, TurretMode.Detection);
                 }
+
+                __instance.DestroyIfBatteryIsEmpty(PrevUsedTurret);
                 PrevUsedTurret = null;
             }
         }
