@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Anubis.LC.LaserControlPlugin.Components;
+using LethalLib.Extras;
 
 namespace Anubis.LC.LaserControlPlugin.Store
 {
@@ -12,6 +13,8 @@ namespace Anubis.LC.LaserControlPlugin.Store
         private static readonly int Price = 50;
         private static readonly string Name = "Pointer";
         private static readonly string Description = "To point laser to some direction";
+
+        public static Item LaserPointerItemInstance { get; private set; }
 
         public static void RegisterShopItem()
         {
@@ -22,7 +25,7 @@ namespace Anubis.LC.LaserControlPlugin.Store
             ];
             Item flashLaserPointer = allItems.FirstOrDefault(item => item.name == "FlashLaserPointer");
 
-            if (flashLaserPointer != null)
+            if (flashLaserPointer != null && !LaserPointerItemInstance)
             {
                 Items.RegisterShopItem(CreateBuyableItem(flashLaserPointer), null, null, CreateInfoNode(Name, Description), Price);
             }
@@ -35,6 +38,7 @@ namespace Anubis.LC.LaserControlPlugin.Store
             item.isScrap = false;
             item.itemName = Name;
             item.creditsWorth = Price;
+            LaserPointerItemInstance = item;
             return item;
         }
 

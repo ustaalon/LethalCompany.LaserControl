@@ -1,5 +1,6 @@
 ﻿using Anubis.LC.LaserControlPlugin.Components;
 using Anubis.LC.LaserControlPlugin.Helpers;
+using Anubis.LC.LaserControlPlugin.ModNetwork;
 using Anubis.LC.LaserControlPlugin.Store;
 using HarmonyLib;
 using System.Collections.Generic;
@@ -17,15 +18,12 @@ namespace Anubis.LC.LaserControlPlugin.Patches
             var item = StartOfRound.Instance.allItemsList?.itemsList?.FirstOrDefault(itm => itm.spawnPrefab && itm.spawnPrefab.name == "LaserPointer");
             if (item != null)
             {
-                ModStaticHelper.Logger.LogInfo("Added LaserPointerTurretOnAndOff to bind turrets and/or landmines and laser pointer");
+                ModStaticHelper.Logger.LogInfo("Added LaserPointerRaycastTarget to bind turrets and/or landmines and laser pointer");
                 item.spawnPrefab.AddComponent<LaserPointerRaycastTarget>();
             }
 
-            if (LethalConfigHelper.IsPointerBuyable.Value)
-            {
-                ModStaticHelper.Logger.LogInfo("Added laser pointer to the ship's store");
-                BuyableLaserPointer.RegisterShopItem();
-            }
+            ModStaticHelper.Logger.LogInfo("Added laser pointer to the ship's store");
+            BuyableLaserPointer.RegisterShopItem();
         }
     }
 }

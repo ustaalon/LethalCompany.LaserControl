@@ -1,3 +1,8 @@
+### 0.1.2
+- Most of sync issues solved between players
+- Laser pointer now can detonate landmines
+- Added host configuration for current game session
+
 ### 0.1.1
 - Minor turret bugs issues fix
 - Networking and sync adjustments between players

@@ -1,6 +1,10 @@
 ﻿using Anubis.LC.LaserControlPlugin.Components;
 using Anubis.LC.LaserControlPlugin.Extensions;
 using Anubis.LC.LaserControlPlugin.Helpers;
+using Anubis.LC.LaserControlPlugin.Store;
+using BepInEx.Configuration;
+using LethalLib.Modules;
+using RuntimeNetcodeRPCValidator;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +26,23 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
 
         private readonly float maxDistance = 35f;
         private readonly float minDistance = 25f;
+
+        private Dictionary<string, bool> HostConfigurationForPlayers = new Dictionary<string, bool>();
+
+        public bool GetConfigItemValueOfPlayer(string key)
+        {
+            if (!IsHost && HostConfigurationForPlayers.TryGetValue(key, out bool playerValue))
+            {
+                return playerValue;
+            }
+
+            if (IsHost && LethalConfigHelper.HostConfigurationForPlayers.TryGetValue(key, out bool hostValue))
+            {
+                return hostValue;
+            }
+
+            return false;
+        }
 
         public Dictionary<int, LaserPointerRaycast> GetAllLaserPointerRaycastsAsDict()
         {
@@ -162,15 +183,48 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         [ClientRpc]
         public void SyncAllTurretsAndRaycastsClientRpc()
         {
-            ModStaticHelper.Logger.LogWarning("---- START SYNC TURRET AND LASER POINTERS ----");
+            ModStaticHelper.Logger.LogInfo("Syncing turrets and laser pointers");
             Turret[] turrets = FindAllTurrets();
             currentTurrets = turrets;
             currentTurretsAsDict = turrets.ToDictionary(t => t.NetworkObjectId);
-
             LaserPointerRaycast[] laserPointerRaycasts = FindAllLaserPointerRaycasts();
             currentLaserPointerRaycast = laserPointerRaycasts;
             currentLaserPointerRaycastAsDict = laserPointerRaycasts.ToDictionary(t => t.GetHashCode());
-            ModStaticHelper.Logger.LogWarning("---- END SYNC TURRET AND LASER POINTERS ----");
+        }
+
+        [ServerRpc]
+        public void SyncHostConfigurationServerRpc()
+        {
+            if (!IsHost) return;
+            ModStaticHelper.Logger.LogInfo("Syncing host mod configuration for other players");
+            SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.IsPointerBuyable), LethalConfigHelper.IsPointerBuyable.Value);
+            SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.IsPointerCanTurnOnAndOffTurrets), LethalConfigHelper.IsPointerCanTurnOnAndOffTurrets.Value);
+            SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.IsPointerCanControlTurrets), LethalConfigHelper.IsPointerCanControlTurrets.Value);
+            SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.IsPointerCanDetonateLandmines), LethalConfigHelper.IsPointerCanDetonateLandmines.Value);
+        }
+
+        [ClientRpc]
+        public void SyncHostConfigurationClientRpc(string key, bool value)
+        {
+            ModStaticHelper.Logger.LogInfo($"Syncing host mod configuration for player (key: {key}, value: {value})");
+            HostConfigurationForPlayers.Remove(key);
+            if (!HostConfigurationForPlayers.TryAdd(key, value))
+            {
+                ModStaticHelper.Logger.LogWarning($"Error while syncing host mod configuration for player (key: {key}, value: {value})");
+            }
+
+            if (key.Equals(nameof(LethalConfigHelper.IsPointerBuyable)) && HostConfigurationForPlayers.TryGetValue(nameof(LethalConfigHelper.IsPointerBuyable), out var isPointerBuyableValue) && !isPointerBuyableValue)
+            {
+                ModStaticHelper.Logger.LogInfo("Laser pointer removed from the ship's store");
+                Items.RemoveShopItem(BuyableLaserPointer.LaserPointerItemInstance);
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        public void AskHostForSyncServerRpc()
+        {
+            ModStaticHelper.Logger.LogInfo("Asking host to sync configuration");
+            SyncHostConfigurationServerRpc();
         }
 
         private void Awake()
@@ -188,6 +242,7 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
             // We need to wait because sending an RPC before a NetworkObject is spawned results in errors.
             yield return new WaitUntil(() => NetworkObject.IsSpawned);
             SyncAllTurretsAndRaycastsServerRpc();
+            AskHostForSyncServerRpc();
         }
     }
 }

@@ -34,6 +34,11 @@ Please consider support by [this link](https://ko-fi.com/ustaalon). It will help
 - Thanks to Unique Albino (DamonB), Miss Scarlett and Azim for helping me troubleshoot
 
 # Release Notes
+### 0.1.2
+- Most of sync issues solved between players
+- Laser pointer now can detonate landmines
+- Added host configuration for current game session
+
 ### 0.1.1
 - Minor turret bugs issues fix
 - Networking and sync adjustments between players

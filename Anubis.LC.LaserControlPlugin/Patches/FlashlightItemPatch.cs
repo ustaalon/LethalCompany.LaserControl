@@ -18,7 +18,8 @@ namespace Anubis.LC.LaserControlPlugin.Patches
         [HarmonyPrefix]
         private static void ItemActivate(FlashlightItem __instance, bool used, bool buttonDown = true)
         {
-            if (!__instance.name.Contains(LASER_PROP_NAME) || !LethalConfigHelper.IsBeta.Value) return;
+            if (!__instance.name.Contains(LASER_PROP_NAME)) return;
+            if (!Networking.Instance.GetConfigItemValueOfPlayer(nameof(LethalConfigHelper.IsPointerCanControlTurrets))) return;
 
             if (__instance.gameObject.GetComponent<LaserPointerRaycast>() == null)
             {
@@ -40,15 +41,18 @@ namespace Anubis.LC.LaserControlPlugin.Patches
         [HarmonyPostfix]
         private static void Update(FlashlightItem __instance)
         {
-            if (!__instance.name.Contains(LASER_PROP_NAME) || !LethalConfigHelper.IsBeta.Value) return;
+            if (!__instance.name.Contains(LASER_PROP_NAME)) return;
+            if (!Networking.Instance.GetConfigItemValueOfPlayer(nameof(LethalConfigHelper.IsPointerCanControlTurrets))) return;
 
             LaserPointerRaycast laserPointerRaycast = __instance.GetComponent<LaserPointerRaycast>();
             if (!laserPointerRaycast) return;
 
             if (laserPointerRaycast.state)
             {
+                ModStaticHelper.Logger.LogInfo("Pointer is working");
                 var turret = Networking.Instance.GetNearestTurret();
                 if (turret == null) return;
+                ModStaticHelper.Logger.LogInfo("Pointer is working and turret found");
 
                 __instance.UseLaserPointerItemBatteries();
 
