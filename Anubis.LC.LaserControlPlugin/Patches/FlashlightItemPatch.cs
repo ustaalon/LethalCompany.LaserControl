@@ -21,18 +21,17 @@ namespace Anubis.LC.LaserControlPlugin.Patches
             if (!__instance.name.Contains(LASER_PROP_NAME)) return;
             if (!Networking.Instance.GetConfigItemValueOfPlayer(nameof(LethalConfigHelper.IsPointerCanControlTurrets))) return;
 
-            if (__instance.gameObject.GetComponent<LaserPointerRaycast>() == null)
+            FlashlightItemExtensions.LaserPointerRaycastCurrentInstance = __instance.GetComponent<LaserPointerRaycast>();
+
+            if (FlashlightItemExtensions.LaserPointerRaycastCurrentInstance == null)
             {
                 __instance.gameObject.AddComponent<LaserPointerRaycast>();
-                FlashlightItemExtensions.LaserPointerRaycastCurrentInstance = __instance.GetComponent<LaserPointerRaycast>();
             }
-            else
+
+            if (FlashlightItemExtensions.LaserPointerRaycastCurrentInstance && !FlashlightItemExtensions.LaserPointerRaycastCurrentInstance.state)
             {
-                FlashlightItemExtensions.LaserPointerRaycastCurrentInstance = __instance.GetComponent<LaserPointerRaycast>();
-                if (FlashlightItemExtensions.LaserPointerRaycastCurrentInstance && !FlashlightItemExtensions.LaserPointerRaycastCurrentInstance.state)
-                {
-                    Object.Destroy(FlashlightItemExtensions.LaserPointerRaycastCurrentInstance);
-                }
+                ModStaticHelper.Logger.LogInfo("Laser pointer destroyed");
+                Object.Destroy(FlashlightItemExtensions.LaserPointerRaycastCurrentInstance);
             }
             Networking.Instance.SyncAllTurretsAndRaycastsServerRpc();
         }
@@ -54,17 +53,22 @@ namespace Anubis.LC.LaserControlPlugin.Patches
                 if (turret == null) return;
                 ModStaticHelper.Logger.LogInfo("Pointer is working and turret found");
 
-                __instance.UseLaserPointerItemBatteries();
-
                 if (PrevUsedTurret && PrevUsedTurret?.NetworkObjectId != turret.NetworkObjectId && PrevUsedTurret?.turretMode != TurretMode.Detection)
                 {
                     ModStaticHelper.Logger.LogInfo("Previous turret no longer in player control, stop firing (ON)");
                     Networking.Instance.SwitchTurretModeServerRpc(PrevUsedTurret.NetworkObjectId, TurretMode.Detection);
                 }
+
+                Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Firing);
                 Networking.Instance.TurnTowardsLaserBeamIfHasLOSServerRpc(turret.NetworkObjectId, laserPointerRaycast.GetHashCode());
 
                 PrevUsedTurret = turret;
                 __instance.DestroyIfBatteryIsEmpty(turret);
+            }
+            else
+            {
+                ModStaticHelper.Logger.LogInfo("Laser pointer destroyed");
+                Object.Destroy(laserPointerRaycast);
             }
 
             if (!laserPointerRaycast.state && PrevUsedTurret != null)

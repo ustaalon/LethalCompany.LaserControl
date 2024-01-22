@@ -1,5 +1,4 @@
-﻿using Anubis.LC.LaserControlPlugin.Helpers;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Anubis.LC.LaserControlPlugin.Components
 {

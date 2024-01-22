@@ -20,16 +20,19 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
 
         public static IEnumerator DestroyIfBatteryIsEmpty(this FlashlightItem flashlightItem, Turret? turret = null)
         {
-            if(turret && flashlightItem.insertedBattery.charge <= 0f)
+            if (flashlightItem.insertedBattery.charge <= 0f)
             {
-                ModStaticHelper.Logger.LogInfo("No battery to the laser pointer. Turning off turret");
-                Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
-                yield return turret.TurnOffAndOnTurret();
-            }
+                if (LaserPointerRaycastCurrentInstance)
+                {
+                    Object.Destroy(LaserPointerRaycastCurrentInstance);
+                }
 
-            if (LaserPointerRaycastCurrentInstance && flashlightItem.insertedBattery.charge <= 0f)
-            {
-                Object.Destroy(LaserPointerRaycastCurrentInstance);
+                if (turret)
+                {
+                    ModStaticHelper.Logger.LogInfo("No battery to the laser pointer. Turning off turret");
+                    Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
+                    yield return turret.TurnOffAndOnTurret();
+                }
                 yield return true;
             }
             yield return false;

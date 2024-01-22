@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using Anubis.LC.LaserControlPlugin.Components;
-using LethalLib.Extras;
 
 namespace Anubis.LC.LaserControlPlugin.Store
 {
@@ -16,7 +14,7 @@ namespace Anubis.LC.LaserControlPlugin.Store
 
         public static Item LaserPointerItemInstance { get; private set; }
 
-        public static void RegisterShopItem()
+        public static void RegisterShopItem(GameObject spawnPrefab)
         {
             List<Item> allItems =
             [
@@ -27,17 +25,18 @@ namespace Anubis.LC.LaserControlPlugin.Store
 
             if (flashLaserPointer != null && !LaserPointerItemInstance)
             {
-                Items.RegisterShopItem(CreateBuyableItem(flashLaserPointer), null, null, CreateInfoNode(Name, Description), Price);
+                Items.RegisterShopItem(CreateBuyableItem(flashLaserPointer, spawnPrefab), null, null, CreateInfoNode(Name, Description), Price);
             }
         }
 
-        private static Item CreateBuyableItem(Item original)
+        private static Item CreateBuyableItem(Item original, GameObject spawnPrefab)
         {
             Item item = Object.Instantiate<Item>(original);
             item.name = "Buyable" + original.name;
             item.isScrap = false;
             item.itemName = Name;
             item.creditsWorth = Price;
+            item.spawnPrefab = spawnPrefab;
             LaserPointerItemInstance = item;
             return item;
         }

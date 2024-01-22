@@ -188,6 +188,12 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
             currentTurrets = turrets;
             currentTurretsAsDict = turrets.ToDictionary(t => t.NetworkObjectId);
             LaserPointerRaycast[] laserPointerRaycasts = FindAllLaserPointerRaycasts();
+            ModStaticHelper.Logger.LogError("---------------");
+            foreach (var laser in laserPointerRaycasts)
+            {
+                ModStaticHelper.Logger.LogInfo($"Laser pointer network Id ${laser.GetHashCode()}");
+            }
+            ModStaticHelper.Logger.LogError("---------------");
             currentLaserPointerRaycast = laserPointerRaycasts;
             currentLaserPointerRaycastAsDict = laserPointerRaycasts.ToDictionary(t => t.GetHashCode());
         }
