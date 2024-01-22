@@ -20,8 +20,7 @@ Please let me know about any bugs, issues or requests regarding my mod by openin
 Please consider support by [this link](https://ko-fi.com/ustaalon). It will help me to continue and focus on mods and open-source.
 
 ## Known Issues
-- Turret rotation not always working smoothly or correctly 
-- Turret timing issues
+- Turret rotation sync not working for 100% between players
 
 ## Roadmap
 - Making sure everything related to the turret is stable
@@ -38,6 +37,7 @@ Please consider support by [this link](https://ko-fi.com/ustaalon). It will help
 - Most of sync issues solved between players
 - Laser pointer now can detonate landmines
 - Added host configuration for current game session
+- Fix issues with LethalLevelLoader (Egypt mod, etc)
 
 ### 0.1.1
 - Minor turret bugs issues fix

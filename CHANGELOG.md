@@ -2,6 +2,7 @@
 - Most of sync issues solved between players
 - Laser pointer now can detonate landmines
 - Added host configuration for current game session
+- Fix issues with LethalLevelLoader (Egypt mod, etc)
 
 ### 0.1.1
 - Minor turret bugs issues fix
