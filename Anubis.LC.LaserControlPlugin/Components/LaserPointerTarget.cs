@@ -16,7 +16,7 @@ namespace Anubis.LC.LaserControlPlugin.Components
 
         protected bool triggered = false;
 
-        protected Vector3 offset = Vector3.up * 0.1f;
+        protected Vector3 offset = Vector3.up * 0.2f;
         protected Vector3 hitPoint;
 
         protected void Awake()
