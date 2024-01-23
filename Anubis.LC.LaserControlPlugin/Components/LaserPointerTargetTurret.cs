@@ -17,6 +17,7 @@ namespace Anubis.LC.LaserControlPlugin.Components
         protected new void Awake()
         {
             base.Awake();
+            offset = Vector3.up * 0.2f;
             target = GetComponent<Turret>();
         }
 

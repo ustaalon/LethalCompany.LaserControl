@@ -4,7 +4,6 @@ using Anubis.LC.LaserControlPlugin.Helpers;
 using Anubis.LC.LaserControlPlugin.ModNetwork;
 using HarmonyLib;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 namespace Anubis.LC.LaserControlPlugin.Patches
 {
