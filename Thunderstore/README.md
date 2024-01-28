@@ -8,13 +8,19 @@ Binding the laser pointer to the turret. What bad things could happen?
 - If you point it to the body - the turret will be offline for 5 seconds
 - If you point to somewhere else around the facility - the turret will shoot in this direction
 
-## THIS MOD IS IN BETA PHASE
-So this mod is in the beta phase, which means it might not be stable enough with other mods or have some issues. You can feel free to contribute by forking the repo, giving feedback and reporting issues. 
+## This mod can do:
+- Can control turret (shoot and control direction)
+- Can turn off turrets for few seconds
+- Buyable item via ship's store
+- Battery running low faster than usual while controlling turrets, etc
+- Laser pointer configuration for host
+- Can detonate landmines
+
+[Roadmap / Additional things to add](https://github.com/ustaalon/LethalCompany.LaserControl/issues/3)
 
 ## Configuration
 You can set in the mod configuration if you want to be able to buy laser pointers via the store or use all mod features (as some are not yet stable)
 ![image](https://github.com/ustaalon/LethalCompany.LaserControl/assets/19238320/3e3705e9-d82a-42ce-b418-40d322171d04)
-
 
 ## Bugs, Issues & Requests
 Please let me know about any bugs, issues or requests regarding my mod by opening an [issue](https://github.com/ustaalon/LethalCompany.LaserControl/issues), by leaving a comment in [this Discord channel](https://discord.com/channels/1168655651455639582/1201246788389187594) in [Lethal Company Modding](https://discord.gg/gtQyE4SV) or by sending me an email at ustaalon@gmail.com
