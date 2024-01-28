@@ -47,10 +47,10 @@ namespace Anubis.LC.LaserControlPlugin.Patches
 
             if (laserPointerRaycast.state)
             {
-                __instance.UseLaserPointerItemBatteries();
                 ModStaticHelper.Logger.LogInfo("Pointer is working");
                 var turret = Networking.Instance.GetNearestTurret();
                 if (turret == null) return;
+                __instance.UseLaserPointerItemBatteries(turret);
                 ModStaticHelper.Logger.LogInfo("Pointer is working and turret found");
 
                 if (PrevUsedTurret && PrevUsedTurret?.NetworkObjectId != turret.NetworkObjectId && PrevUsedTurret?.turretMode != TurretMode.Detection)

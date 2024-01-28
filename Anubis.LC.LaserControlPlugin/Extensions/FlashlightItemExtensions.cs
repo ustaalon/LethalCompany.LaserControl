@@ -11,10 +11,10 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
     {
         public static LaserPointerRaycast LaserPointerRaycastCurrentInstance;
 
-        public static void UseLaserPointerItemBatteries(this FlashlightItem flashlightItem)
+        public static void UseLaserPointerItemBatteries(this FlashlightItem flashlightItem, Turret? turret = null, float reduceAmount = 35f)
         {
-            flashlightItem.insertedBattery.charge -= Time.deltaTime / 35f;
-            flashlightItem.DestroyIfBatteryIsEmpty();
+            flashlightItem.insertedBattery.charge -= Time.deltaTime / reduceAmount;
+            flashlightItem.DestroyIfBatteryIsEmpty(turret);
         }
 
         public static IEnumerator DestroyIfBatteryIsEmpty(this FlashlightItem flashlightItem, Turret? turret = null)

@@ -35,6 +35,9 @@ Please consider support by [this link](https://ko-fi.com/ustaalon). It will help
 - Thanks to Unique Albino (DamonB), Miss Scarlett and Azim for helping me troubleshoot
 
 # Release Notes
+### 0.1.3
+- Readme changes
+
 ### 0.1.2
 - Most sync issues are solved between players
 - Laser pointer now can detonate landmines

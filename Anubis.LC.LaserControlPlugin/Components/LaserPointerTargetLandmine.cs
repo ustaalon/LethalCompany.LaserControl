@@ -24,6 +24,7 @@ namespace Anubis.LC.LaserControlPlugin.Components
             if (!triggered && HasCollision(origin.position, origin.forward, transform.position + offset, radius)
                  && !Physics.Linecast(origin.position, hitPoint, 1051400, QueryTriggerInteraction.Ignore))
             {
+                laserPointer.UseLaserPointerItemBatteries();
                 tempCounter += Time.deltaTime;
 
                 if (tempCounter >= maxTemp)

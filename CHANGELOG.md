@@ -1,3 +1,6 @@
+### 0.1.3
+- Readme changes
+
 ### 0.1.2
 - Most of sync issues solved between players
 - Laser pointer now can detonate landmines
