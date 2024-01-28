@@ -17,7 +17,7 @@ You can set in the mod configuration if you want to be able to buy laser pointer
 
 
 ## Bugs, Issues & Requests
-Please let me know about any bugs, issues or requests regarding my mod by opening an [issue](https://github.com/ustaalon/LethalCompany.LaserControl/issues), by leaving a comment in [this Discord channel](https://discord.com/channels/1168655651455639582/1192080227241840640) or by sending me an email at ustaalon@gmail.com
+Please let me know about any bugs, issues or requests regarding my mod by opening an [issue](https://github.com/ustaalon/LethalCompany.LaserControl/issues), by leaving a comment in [this Discord channel](https://discord.com/channels/1168655651455639582/1201246788389187594) in [Lethal Company Modding](https://discord.gg/gtQyE4SV) or by sending me an email at ustaalon@gmail.com
 
 Please consider support by [this link](https://ko-fi.com/ustaalon). It will help me to continue and focus on mods and open-source.
 
