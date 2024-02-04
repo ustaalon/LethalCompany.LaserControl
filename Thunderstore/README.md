@@ -1,12 +1,13 @@
 # Laser Control
-Binding the laser pointer to the turret. What bad things could happen?
+Laser pointers are now useful and can do amazing things if you just try.
 
 ## How To Use?
-1. Find or buy a pointer laser
-2. Point it to the turret body or to someone
+1. Find or buy a laser pointer
+2. Point it to the turret, landmine or someone.
 
-- If you point it to the body - the turret will be offline for 5 seconds
-- If you point to somewhere else around the facility - the turret will shoot in this direction
+- If you point it to turret - the turret will be offline for 5 seconds
+- If you point it to landmine - the landmine will explode
+- If you point to somewhere else around the facility - the turret will shoot in that direction (mouse right click to shoot)
 
 ## This mod can do:
 - Can control turret (shoot and control direction)
@@ -26,14 +27,6 @@ You can set in the mod configuration if you want to be able to buy laser pointer
 Please let me know about any bugs, issues or requests regarding my mod by opening an [issue](https://github.com/ustaalon/LethalCompany.LaserControl/issues), by leaving a comment in [this Discord channel](https://discord.com/channels/1168655651455639582/1201246788389187594) in [Lethal Company Modding](https://discord.gg/gtQyE4SV) or by sending me an email at ustaalon@gmail.com
 
 Please consider support by [this link](https://ko-fi.com/ustaalon). It will help me to continue and focus on mods and open-source.
-
-## Known Issues
-- Turret rotation sync not working for 100% between players
-
-## Roadmap
-- Making sure everything related to the turret is stable
-- Make sure it is working with other mods
-- Making the laser pointer do more cool stuff
 
 ## Additional Credits
 - Theme_Light for the idea to create this mod and for the mod avatar

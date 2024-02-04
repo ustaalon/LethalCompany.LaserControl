@@ -1,3 +1,11 @@
+### 0.1.4
+- Increasing turret turn speed when bonded with the laser pointer
+- Change laser pointer logic to Mouse Right click to shoot
+- After a few seconds of usage, the turret and laser pointer will stop working
+- Fixed compatibility with ReservedSlot
+- Fixed compatibility with AdvancedCompany
+- Added configuration for battery drain
+
 ### 0.1.3
 - Readme changes
 
