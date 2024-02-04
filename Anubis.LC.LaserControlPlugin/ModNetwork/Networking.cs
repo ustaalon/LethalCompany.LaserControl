@@ -112,6 +112,19 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
             .FirstOrDefault();
         }
 
+        public Turret[] GetXNearestTurret(int x)
+        {
+            if (x <= 1) return [GetNearestTurret()];
+            Transform localPlayerTransform = StartOfRound.Instance.localPlayerController.transform;
+            Turret[] turretArray = GetAllTurrets();
+
+            return turretArray
+            .Where(turret => Vector3.Distance(turret.transform.position, localPlayerTransform.position) <= minDistance)
+            .OrderBy(turret => Vector3.Distance(turret.transform.position, localPlayerTransform.position))
+            .Take(x)
+            .ToArray();
+        }
+
         [ServerRpc(RequireOwnership = false)]
         public void StopTurretFireVisualServerRpc(ulong networkObjectId)
         {
