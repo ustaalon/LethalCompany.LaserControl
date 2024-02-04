@@ -16,18 +16,26 @@ namespace Anubis.LC.LaserControlPlugin.Patches
         static Turret? PrevUsedTurret;
         static float counterOfUsage = 0f;
         static float maxSeconds = 15f;
-        static bool isAltKeyPressed = false;
         private static InputAction leftAltAction;
+        private static InputAction rightClickAction;
+        private static bool IsClickToShoot = false;
+        private static bool IsBusy = false;
 
         [HarmonyPatch("Start")]
         [HarmonyPostfix]
         private static void Start(FlashlightItem __instance)
         {
             if (!__instance.name.Contains(LASER_PROP_NAME)) return;
-            if (!ModStaticHelper.IsThisModInstalled("FlipMods.ReservedFlashlightSlot")) return;
-            leftAltAction = new InputAction(binding: "<Keyboard>/leftAlt");
-            leftAltAction.canceled += (CallbackContext context) => OnAltKeyReleased(__instance);
-            leftAltAction.Enable();
+            if (ModStaticHelper.IsThisModInstalled("FlipMods.ReservedFlashlightSlot"))
+            {
+                leftAltAction = new InputAction(binding: "<Keyboard>/leftAlt");
+                leftAltAction.canceled += context => OnAltKeyReleased(__instance);
+                leftAltAction.Enable();
+            }
+
+            rightClickAction = new InputAction(binding: "<Mouse>/rightButton");
+            rightClickAction.canceled += context => OnRightClickReleased(__instance);
+            rightClickAction.Enable();
         }
 
         [HarmonyPatch("ItemActivate")]
@@ -78,9 +86,21 @@ namespace Anubis.LC.LaserControlPlugin.Patches
 
                 if (counterOfUsage < maxSeconds)
                 {
-                    Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Firing);
+                    if (!IsClickToShoot)
+                    {
+                        ModStaticHelper.Logger.LogInfo("Charging...");
+                        Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
+                        Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Charging);
+                    }
+                    else
+                    {
+                        ModStaticHelper.Logger.LogInfo("Firing...");
+                        Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Firing);
+                    }
                     Networking.Instance.TurnTowardsLaserBeamIfHasLOSServerRpc(turret.NetworkObjectId, laserPointerRaycast.GetHashCode());
-                } else
+                    IsBusy = false;
+                }
+                else
                 {
                     __instance.SwitchFlashlight(on: false);
                     turret.TurnOffAndOnTurret();
@@ -109,7 +129,16 @@ namespace Anubis.LC.LaserControlPlugin.Patches
             }
         }
 
-        public static void OnAltKeyReleased(FlashlightItem __instance)
+        private static void OnRightClickReleased(FlashlightItem __instance)
+        {
+            if (IsBusy) return;
+            LaserPointerRaycast laserPointerRaycast = __instance.GetComponent<LaserPointerRaycast>();
+            if (!laserPointerRaycast || !laserPointerRaycast.state) return;
+            IsBusy = true;
+            IsClickToShoot = IsClickToShoot == false;
+        }
+
+        private static void OnAltKeyReleased(FlashlightItem __instance)
         {
             __instance.SwitchFlashlight(on: false);
         }
