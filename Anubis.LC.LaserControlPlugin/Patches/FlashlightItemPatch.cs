@@ -17,9 +17,11 @@ namespace Anubis.LC.LaserControlPlugin.Patches
         static float counterOfUsage = 0f;
         static float maxSeconds = 15f;
         private static InputAction leftAltAction;
+        private static InputAction leftClickAction;
         private static InputAction rightClickAction;
         private static bool IsClickToShoot = false;
-        private static bool IsBusy = false;
+        private static bool IsRightBusy = false;
+        private static bool IsLeftBusy = false;
 
         [HarmonyPatch("Start")]
         [HarmonyPostfix]
@@ -33,6 +35,13 @@ namespace Anubis.LC.LaserControlPlugin.Patches
                 leftAltAction.Enable();
             }
 
+            if (ModStaticHelper.IsThisModInstalled("com.potatoepet.AdvancedCompany"))
+            {
+                leftClickAction = new InputAction(binding: "<Mouse>/leftButton");
+                leftClickAction.canceled += context => OnLeftClickReleased(__instance);
+                leftClickAction.Enable();
+            }
+
             rightClickAction = new InputAction(binding: "<Mouse>/rightButton");
             rightClickAction.canceled += context => OnRightClickReleased(__instance);
             rightClickAction.Enable();
@@ -43,20 +52,8 @@ namespace Anubis.LC.LaserControlPlugin.Patches
         private static void ItemActivate(FlashlightItem __instance, bool used, bool buttonDown = true)
         {
             if (!__instance.name.Contains(LASER_PROP_NAME)) return;
-
-            FlashlightItemExtensions.LaserPointerRaycastCurrentInstance = __instance.GetComponent<LaserPointerRaycast>();
-
-            if (FlashlightItemExtensions.LaserPointerRaycastCurrentInstance == null)
-            {
-                __instance.gameObject.AddComponent<LaserPointerRaycast>();
-            }
-
-            if (FlashlightItemExtensions.LaserPointerRaycastCurrentInstance && !FlashlightItemExtensions.LaserPointerRaycastCurrentInstance.state)
-            {
-                ModStaticHelper.Logger.LogInfo("Laser pointer destroyed");
-                Object.Destroy(FlashlightItemExtensions.LaserPointerRaycastCurrentInstance);
-            }
-            Networking.Instance.SyncAllTurretsAndRaycastsServerRpc();
+            if (ModStaticHelper.IsThisModInstalled("com.potatoepet.AdvancedCompany")) return;
+            CreateAndSyncBeam(__instance);
         }
 
         [HarmonyPatch("Update")]
@@ -98,7 +95,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
                         Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Firing);
                     }
                     Networking.Instance.TurnTowardsLaserBeamIfHasLOSServerRpc(turret.NetworkObjectId, laserPointerRaycast.GetHashCode());
-                    IsBusy = false;
+                    IsRightBusy = false;
                 }
                 else
                 {
@@ -131,16 +128,42 @@ namespace Anubis.LC.LaserControlPlugin.Patches
 
         private static void OnRightClickReleased(FlashlightItem __instance)
         {
-            if (IsBusy) return;
+            if (IsRightBusy) return;
             LaserPointerRaycast laserPointerRaycast = __instance.GetComponent<LaserPointerRaycast>();
             if (!laserPointerRaycast || !laserPointerRaycast.state) return;
-            IsBusy = true;
+            IsRightBusy = true;
             IsClickToShoot = IsClickToShoot == false;
+        }
+
+        private static void OnLeftClickReleased(FlashlightItem __instance)
+        {
+            if (IsLeftBusy) return;
+            IsLeftBusy = true;
+            CreateAndSyncBeam(__instance);
         }
 
         private static void OnAltKeyReleased(FlashlightItem __instance)
         {
             __instance.SwitchFlashlight(on: false);
+        }
+
+        private static void CreateAndSyncBeam(FlashlightItem __instance)
+        {
+            FlashlightItemExtensions.LaserPointerRaycastCurrentInstance = __instance.GetComponent<LaserPointerRaycast>();
+
+            if (FlashlightItemExtensions.LaserPointerRaycastCurrentInstance == null)
+            {
+                ModStaticHelper.Logger.LogInfo("Added LaserPointerRaycast to laser pointer");
+                __instance.gameObject.AddComponent<LaserPointerRaycast>();
+            }
+
+            if (FlashlightItemExtensions.LaserPointerRaycastCurrentInstance && !FlashlightItemExtensions.LaserPointerRaycastCurrentInstance.state)
+            {
+                ModStaticHelper.Logger.LogInfo("Laser pointer destroyed");
+                Object.Destroy(FlashlightItemExtensions.LaserPointerRaycastCurrentInstance);
+            }
+            Networking.Instance.SyncAllTurretsAndRaycastsServerRpc();
+            IsLeftBusy = false;
         }
     }
 }

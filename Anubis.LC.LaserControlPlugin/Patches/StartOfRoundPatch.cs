@@ -19,7 +19,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
                 ModStaticHelper.Logger.LogInfo("Added LaserPointerRaycastTarget to bind turrets and/or landmines and laser pointer");
                 item.spawnPrefab.AddComponent<LaserPointerRaycastTarget>();
 
-                ModStaticHelper.Logger.LogInfo("Added laser pointer to the ship's store GameNetworkManager");
+                ModStaticHelper.Logger.LogInfo("Added laser pointer to the ship's store");
                 BuyableLaserPointer.RegisterShopItem(item.spawnPrefab);
             }
         }
