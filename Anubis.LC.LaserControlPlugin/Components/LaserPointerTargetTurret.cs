@@ -23,7 +23,7 @@ namespace Anubis.LC.LaserControlPlugin.Components
 
         public override void Warmup(Transform origin, FlashlightItem laserPointer)
         {
-            if (!Networking.Instance.GetConfigItemValueOfPlayer(nameof(LethalConfigHelper.IsPointerCanTurnOnAndOffTurrets)) || !target) return;
+            if (!Networking.Instance.GetConfigItemValueOfPlayer<bool>(nameof(LethalConfigHelper.IsPointerCanTurnOnAndOffTurrets)) || !target) return;
 
             if (!triggered && HasCollision(origin.position, origin.forward, transform.position + offset, radius)
                  && !Physics.Linecast(origin.position, hitPoint, 1051400, QueryTriggerInteraction.Ignore))

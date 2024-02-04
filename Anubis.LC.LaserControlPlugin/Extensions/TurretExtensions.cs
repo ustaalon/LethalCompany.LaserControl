@@ -14,16 +14,16 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
 
         public static IEnumerator TurnOffAndOnTurret(this Turret turret)
         {
-            ModStaticHelper.Logger.LogError("-----------------");
+            ModStaticHelper.Logger.LogWarning("-----------------");
             ModStaticHelper.Logger.LogInfo($"Turret Temp High -> OFF");
-            ModStaticHelper.Logger.LogError("-----------------");
+            ModStaticHelper.Logger.LogWarning("-----------------");
             Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
             turret.ToggleTurretEnabled(false);
             yield return new WaitForSeconds(3);
             turret.ToggleTurretEnabled(true);
-            ModStaticHelper.Logger.LogError("-----------------");
-            ModStaticHelper.Logger.LogInfo($"Turret Temp High -> ON");
-            ModStaticHelper.Logger.LogError("-----------------");
+            ModStaticHelper.Logger.LogWarning("-----------------");
+            ModStaticHelper.Logger.LogInfo($"Turret Temp Low -> ON");
+            ModStaticHelper.Logger.LogWarning("-----------------");
         }
 
         private static Vector3 GetEndPositionOfBeam(Light light)

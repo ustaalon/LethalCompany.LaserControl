@@ -33,6 +33,7 @@
     <Reference Include="Unity.Netcode.Runtime" HintPath="$(LC_REFERENCES)\Unity.Netcode.Runtime.dll" Private="False" />
     <Reference Include="Unity.TextMeshPro" HintPath="$(LC_REFERENCES)\Unity.TextMeshPro.dll" Private="False" />
     <Reference Include="UnityEngine.UI" HintPath="$(LC_REFERENCES)\UnityEngine.UI.dll" Private="False" />
+    <Reference Include="Unity.InputSystem" HintPath="$(LC_REFERENCES)\Unity.InputSystem.dll" Private="False" />
   </ItemGroup>
   
   

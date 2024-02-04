@@ -27,21 +27,21 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         private readonly float maxDistance = 35f;
         private readonly float minDistance = 25f;
 
-        private Dictionary<string, bool> HostConfigurationForPlayers = new Dictionary<string, bool>();
+        private Dictionary<string, object> HostConfigurationForPlayers = new Dictionary<string, object>();
 
-        public bool GetConfigItemValueOfPlayer(string key)
+        public T GetConfigItemValueOfPlayer<T>(string key)
         {
-            if (!IsHost && HostConfigurationForPlayers.TryGetValue(key, out bool playerValue))
+            if (!IsHost && HostConfigurationForPlayers.TryGetValue(key, out var playerValue))
             {
-                return playerValue;
+                return (T)playerValue;
             }
 
-            if (IsHost && LethalConfigHelper.HostConfigurationForPlayers.TryGetValue(key, out bool hostValue))
+            if (IsHost && LethalConfigHelper.HostConfigurationForPlayers.TryGetValue(key, out var hostValue))
             {
-                return hostValue;
+                return (T)hostValue;
             }
 
-            return false;
+            return default(T);
         }
 
         public Dictionary<int, LaserPointerRaycast> GetAllLaserPointerRaycastsAsDict()
@@ -188,12 +188,6 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
             currentTurrets = turrets;
             currentTurretsAsDict = turrets.ToDictionary(t => t.NetworkObjectId);
             LaserPointerRaycast[] laserPointerRaycasts = FindAllLaserPointerRaycasts();
-            //ModStaticHelper.Logger.LogError("---------------");
-            //foreach (var laser in laserPointerRaycasts)
-            //{
-            //    ModStaticHelper.Logger.LogInfo($"Laser pointer network Id ${laser.GetHashCode()}");
-            //}
-            //ModStaticHelper.Logger.LogError("---------------");
             currentLaserPointerRaycast = laserPointerRaycasts;
             currentLaserPointerRaycastAsDict = laserPointerRaycasts.ToDictionary(t => t.GetHashCode());
         }
@@ -207,10 +201,11 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
             SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.IsPointerCanTurnOnAndOffTurrets), LethalConfigHelper.IsPointerCanTurnOnAndOffTurrets.Value);
             SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.IsPointerCanControlTurrets), LethalConfigHelper.IsPointerCanControlTurrets.Value);
             SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.IsPointerCanDetonateLandmines), LethalConfigHelper.IsPointerCanDetonateLandmines.Value);
+            SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.PointerLaserDrainSpeed), LethalConfigHelper.PointerLaserDrainSpeed.Value);
         }
 
         [ClientRpc]
-        public void SyncHostConfigurationClientRpc(string key, bool value)
+        public void SyncHostConfigurationClientRpc(string key, object value)
         {
             ModStaticHelper.Logger.LogInfo($"Syncing host mod configuration for player (key: {key}, value: {value})");
             HostConfigurationForPlayers.Remove(key);
@@ -219,7 +214,7 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
                 ModStaticHelper.Logger.LogWarning($"Error while syncing host mod configuration for player (key: {key}, value: {value})");
             }
 
-            if (key.Equals(nameof(LethalConfigHelper.IsPointerBuyable)) && HostConfigurationForPlayers.TryGetValue(nameof(LethalConfigHelper.IsPointerBuyable), out var isPointerBuyableValue) && !isPointerBuyableValue)
+            if (key.Equals(nameof(LethalConfigHelper.IsPointerBuyable)) && HostConfigurationForPlayers.TryGetValue(nameof(LethalConfigHelper.IsPointerBuyable), out var isPointerBuyableValue) && !(bool)isPointerBuyableValue)
             {
                 ModStaticHelper.Logger.LogInfo("Laser pointer removed from the ship's store");
                 Items.RemoveShopItem(BuyableLaserPointer.LaserPointerItemInstance);

@@ -1,4 +1,5 @@
-﻿using BepInEx.Logging;
+﻿using BepInEx.Bootstrap;
+using BepInEx.Logging;
 
 namespace Anubis.LC.LaserControlPlugin.Helpers
 {
@@ -9,5 +10,15 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
         public const string modVersion = "0.1.3";
 
         public static ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(modGUID);
+
+        public static bool IsThisModInstalled(string mod)
+        {
+            if (Chainloader.PluginInfos.TryGetValue(mod, out BepInEx.PluginInfo modInfo))
+            {
+                Logger.LogInfo($"Mod ${mod} is loaded alongside {modGUID}");
+                return true;
+            }
+            return false;
+        }
     }
 }

@@ -6,17 +6,19 @@ using System.Reflection;
 using UnityEngine;
 using System.Collections.Generic;
 using Anubis.LC.LaserControlPlugin.ModNetwork;
+using LethalConfig.ConfigItems.Options;
 
 namespace Anubis.LC.LaserControlPlugin.Helpers
 {
     public static class LethalConfigHelper
     {
-        public static Dictionary<string, bool> HostConfigurationForPlayers = new Dictionary<string, bool>();
+        public static Dictionary<string, object> HostConfigurationForPlayers = new Dictionary<string, object>();
 
         public static ConfigEntry<bool> IsPointerBuyable;
         public static ConfigEntry<bool> IsPointerCanTurnOnAndOffTurrets;
         public static ConfigEntry<bool> IsPointerCanDetonateLandmines;
         public static ConfigEntry<bool> IsPointerCanControlTurrets;
+        public static ConfigEntry<float> PointerLaserDrainSpeed;
 
         public static void SetLehalConfig(ConfigFile config)
         {
@@ -64,10 +66,22 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
                 }
             };
 
+            PointerLaserDrainSpeed = config.Bind("General", "Laser Pointer Drain Speed", 35f, "Determines the batery drain speed");
+            PointerLaserDrainSpeed.SettingChanged += (obj, args) =>
+            {
+                HostConfigurationForPlayers.Remove(nameof(PointerLaserDrainSpeed));
+                HostConfigurationForPlayers.TryAdd(nameof(PointerLaserDrainSpeed), PointerLaserDrainSpeed.Value);
+                if (Networking.Instance != null)
+                {
+                    Networking.Instance.SyncHostConfigurationServerRpc();
+                }
+            };
+
             if (!HostConfigurationForPlayers.TryAdd(nameof(IsPointerBuyable), IsPointerBuyable.Value)
             || !HostConfigurationForPlayers.TryAdd(nameof(IsPointerCanTurnOnAndOffTurrets), IsPointerCanTurnOnAndOffTurrets.Value)
             || !HostConfigurationForPlayers.TryAdd(nameof(IsPointerCanControlTurrets), IsPointerCanControlTurrets.Value)
-            || !HostConfigurationForPlayers.TryAdd(nameof(IsPointerCanDetonateLandmines), IsPointerCanDetonateLandmines.Value))
+            || !HostConfigurationForPlayers.TryAdd(nameof(IsPointerCanDetonateLandmines), IsPointerCanDetonateLandmines.Value)
+            || !HostConfigurationForPlayers.TryAdd(nameof(PointerLaserDrainSpeed), PointerLaserDrainSpeed.Value))
             {
                 ModStaticHelper.Logger.LogError("Could not add mod configuration to dictionary");
             }
@@ -76,6 +90,11 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanTurnOnAndOffTurrets, false));
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanDetonateLandmines, false));
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanControlTurrets, false));
+            LethalConfigManager.AddConfigItem(new FloatSliderConfigItem(PointerLaserDrainSpeed, new FloatSliderOptions() {
+                Min = 15f,
+                Max = 100,
+                RequiresRestart = false
+            }));
 
             LethalConfigManager.SetModIcon(LoadNewSprite(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "icon.png")));
             LethalConfigManager.SetModDescription("Binding the laser pointer to the turret. What bad things could happen?");

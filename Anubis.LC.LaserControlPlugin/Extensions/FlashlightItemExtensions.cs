@@ -11,9 +11,10 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
     {
         public static LaserPointerRaycast LaserPointerRaycastCurrentInstance;
 
-        public static void UseLaserPointerItemBatteries(this FlashlightItem flashlightItem, Turret? turret = null, float reduceAmount = 35f)
+        public static void UseLaserPointerItemBatteries(this FlashlightItem flashlightItem, Turret? turret = null, float? reduceSpeed = null)
         {
-            flashlightItem.insertedBattery.charge -= Time.deltaTime / reduceAmount;
+            var configurableReduceSpeed = reduceSpeed.HasValue ? reduceSpeed.Value : Networking.Instance.GetConfigItemValueOfPlayer<float>(nameof(LethalConfigHelper.PointerLaserDrainSpeed));
+            flashlightItem.insertedBattery.charge -= Time.deltaTime / configurableReduceSpeed;
             flashlightItem.DestroyIfBatteryIsEmpty(turret);
         }
 
