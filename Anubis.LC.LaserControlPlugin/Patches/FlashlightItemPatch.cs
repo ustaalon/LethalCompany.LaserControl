@@ -5,7 +5,6 @@ using Anubis.LC.LaserControlPlugin.ModNetwork;
 using UnityEngine.InputSystem;
 using HarmonyLib;
 using UnityEngine;
-using static UnityEngine.InputSystem.InputAction;
 
 namespace Anubis.LC.LaserControlPlugin.Patches
 {
