@@ -21,7 +21,7 @@ Laser pointers are now useful and can do amazing things if you just try.
 
 ## Configuration
 You can set in the mod configuration if you want to be able to buy laser pointers via the store or use all mod features (as some are not yet stable)
-![image](https://github.com/ustaalon/LethalCompany.LaserControl/assets/19238320/3e3705e9-d82a-42ce-b418-40d322171d04)
+![image](https://github.com/ustaalon/LethalCompany.LaserControl/assets/19238320/043d5e9b-becf-4b39-abb7-90f75d1c5424)
 
 ## Bugs, Issues & Requests
 Please let me know about any bugs, issues or requests regarding my mod by opening an [issue](https://github.com/ustaalon/LethalCompany.LaserControl/issues), by leaving a comment in [this Discord channel](https://discord.com/channels/1168655651455639582/1201246788389187594) in [Lethal Company Modding](https://discord.gg/gtQyE4SV) or by sending me an email at ustaalon@gmail.com
