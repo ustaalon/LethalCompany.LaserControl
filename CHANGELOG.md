@@ -5,6 +5,7 @@
 - Fixed compatibility with ReservedSlot
 - Fixed compatibility with AdvancedCompany
 - Added configuration for battery drain
+- Update LethalLib version from v0.13.2 to v0.14.2
 
 ### 0.1.3
 - Readme changes
