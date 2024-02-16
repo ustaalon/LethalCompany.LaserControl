@@ -14,16 +14,16 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
 
         public static IEnumerator TurnOffAndOnTurret(this Turret turret)
         {
-            ModStaticHelper.Logger.LogWarning("-----------------");
-            ModStaticHelper.Logger.LogInfo($"Turret Temp High -> OFF");
-            ModStaticHelper.Logger.LogWarning("-----------------");
+            LaserLogger.LogWarning("-----------------");
+            LaserLogger.LogDebug($"Turret Temp High -> OFF");
+            LaserLogger.LogWarning("-----------------");
             Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
             turret.ToggleTurretEnabled(false);
             yield return new WaitForSeconds(3);
             turret.ToggleTurretEnabled(true);
-            ModStaticHelper.Logger.LogWarning("-----------------");
-            ModStaticHelper.Logger.LogInfo($"Turret Temp Low -> ON");
-            ModStaticHelper.Logger.LogWarning("-----------------");
+            LaserLogger.LogWarning("-----------------");
+            LaserLogger.LogDebug($"Turret Temp Low -> ON");
+            LaserLogger.LogWarning("-----------------");
         }
 
         private static Vector3 GetEndPositionOfBeam(Light light)
@@ -46,7 +46,7 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
 
             Vector3 endPosition = GetEndPositionOfBeam(laserBeamObject.light);
 
-            ModStaticHelper.Logger.LogInfo("Turret firing by player control");
+            LaserLogger.LogDebug("Turret firing by player control");
             turret.hasLineOfSight = true;
             turret.lostLOSTimer = 0f;
             turret.targetingDeadPlayer = false;

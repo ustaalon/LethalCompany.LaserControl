@@ -10,7 +10,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
         [HarmonyPostfix]
         public static void Start(Turret __instance)
         {
-            ModStaticHelper.Logger.LogInfo("Added LaserPointerTargetTurret to the turret");
+            LaserLogger.LogDebug("Added LaserPointerTargetTurret to the turret");
             __instance.gameObject.AddComponent<LaserPointerTargetTurret>();
         }
     }

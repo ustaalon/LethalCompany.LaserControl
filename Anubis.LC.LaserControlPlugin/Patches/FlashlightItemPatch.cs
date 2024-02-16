@@ -46,6 +46,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
             rightClickAction.Enable();
         }
 
+        //[HarmonyBefore(new string[] { "AdvancedCompany" })]
         [HarmonyPatch("ItemActivate")]
         [HarmonyPrefix]
         private static void ItemActivate(FlashlightItem __instance, bool used, bool buttonDown = true)
@@ -67,15 +68,15 @@ namespace Anubis.LC.LaserControlPlugin.Patches
 
             if (laserPointerRaycast.state)
             {
-                ModStaticHelper.Logger.LogInfo("Pointer is working");
+                LaserLogger.LogDebug("Pointer is working");
                 var turret = Networking.Instance.GetNearestTurret();
                 if (turret == null) return;
                 __instance.UseLaserPointerItemBatteries(turret);
-                ModStaticHelper.Logger.LogInfo("Pointer is working and turret found");
+                LaserLogger.LogDebug("Pointer is working and turret found");
 
                 if (PrevUsedTurret && PrevUsedTurret?.NetworkObjectId != turret.NetworkObjectId && PrevUsedTurret?.turretMode != TurretMode.Detection)
                 {
-                    ModStaticHelper.Logger.LogInfo("Previous turret no longer in player control, stop firing (ON)");
+                    LaserLogger.LogDebug("Previous turret no longer in player control, stop firing (ON)");
                     Networking.Instance.SwitchTurretModeServerRpc(PrevUsedTurret.NetworkObjectId, TurretMode.Detection);
                 }
                 counterOfUsage += Time.deltaTime;
@@ -84,13 +85,13 @@ namespace Anubis.LC.LaserControlPlugin.Patches
                 {
                     if (!IsClickToShoot)
                     {
-                        ModStaticHelper.Logger.LogInfo("Charging...");
+                        LaserLogger.LogDebug("Charging...");
                         Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
                         Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Charging);
                     }
                     else
                     {
-                        ModStaticHelper.Logger.LogInfo("Firing...");
+                        LaserLogger.LogDebug("Firing...");
                         Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Firing);
                     }
                     Networking.Instance.TurnTowardsLaserBeamIfHasLOSServerRpc(turret.NetworkObjectId, laserPointerRaycast.GetHashCode());
@@ -108,7 +109,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
             }
             else
             {
-                ModStaticHelper.Logger.LogInfo("Laser pointer destroyed");
+                LaserLogger.LogDebug("Laser pointer destroyed");
                 Object.Destroy(laserPointerRaycast);
             }
 
@@ -116,7 +117,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
             {
                 if (PrevUsedTurret.turretMode != TurretMode.Detection)
                 {
-                    ModStaticHelper.Logger.LogInfo("Previous turret no longer in player control, stop firing (OFF)");
+                    LaserLogger.LogDebug("Previous turret no longer in player control, stop firing (OFF)");
                     Networking.Instance.SwitchTurretModeServerRpc(PrevUsedTurret.NetworkObjectId, TurretMode.Detection);
                 }
 
@@ -152,13 +153,13 @@ namespace Anubis.LC.LaserControlPlugin.Patches
 
             if (FlashlightItemExtensions.LaserPointerRaycastCurrentInstance == null)
             {
-                ModStaticHelper.Logger.LogInfo("Added LaserPointerRaycast to laser pointer");
+                LaserLogger.LogDebug("Added LaserPointerRaycast to laser pointer");
                 __instance.gameObject.AddComponent<LaserPointerRaycast>();
             }
 
             if (FlashlightItemExtensions.LaserPointerRaycastCurrentInstance && !FlashlightItemExtensions.LaserPointerRaycastCurrentInstance.state)
             {
-                ModStaticHelper.Logger.LogInfo("Laser pointer destroyed");
+                LaserLogger.LogDebug("Laser pointer destroyed");
                 Object.Destroy(FlashlightItemExtensions.LaserPointerRaycastCurrentInstance);
             }
             Networking.Instance.SyncAllTurretsAndRaycastsServerRpc();

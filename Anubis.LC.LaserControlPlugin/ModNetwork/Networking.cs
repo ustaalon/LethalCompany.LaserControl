@@ -196,7 +196,7 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         [ClientRpc]
         public void SyncAllTurretsAndRaycastsClientRpc()
         {
-            ModStaticHelper.Logger.LogInfo("Syncing turrets and laser pointers");
+            LaserLogger.LogDebug("Syncing turrets and laser pointers");
             Turret[] turrets = FindAllTurrets();
             currentTurrets = turrets;
             currentTurretsAsDict = turrets.ToDictionary(t => t.NetworkObjectId);
@@ -209,7 +209,7 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         public void SyncHostConfigurationServerRpc()
         {
             if (!IsHost) return;
-            ModStaticHelper.Logger.LogInfo("Syncing host mod configuration for other players");
+            LaserLogger.LogDebug("Syncing host mod configuration for other players");
             SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.IsPointerBuyable), LethalConfigHelper.IsPointerBuyable.Value);
             SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.IsPointerCanTurnOnAndOffTurrets), LethalConfigHelper.IsPointerCanTurnOnAndOffTurrets.Value);
             SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.IsPointerCanControlTurrets), LethalConfigHelper.IsPointerCanControlTurrets.Value);
@@ -220,16 +220,16 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         [ClientRpc]
         public void SyncHostConfigurationClientRpc(string key, object value)
         {
-            ModStaticHelper.Logger.LogInfo($"Syncing host mod configuration for player (key: {key}, value: {value})");
+            LaserLogger.LogDebug($"Syncing host mod configuration for player (key: {key}, value: {value})");
             HostConfigurationForPlayers.Remove(key);
             if (!HostConfigurationForPlayers.TryAdd(key, value))
             {
-                ModStaticHelper.Logger.LogWarning($"Error while syncing host mod configuration for player (key: {key}, value: {value})");
+                LaserLogger.LogWarning($"Error while syncing host mod configuration for player (key: {key}, value: {value})");
             }
 
             if (key.Equals(nameof(LethalConfigHelper.IsPointerBuyable)) && HostConfigurationForPlayers.TryGetValue(nameof(LethalConfigHelper.IsPointerBuyable), out var isPointerBuyableValue) && !(bool)isPointerBuyableValue)
             {
-                ModStaticHelper.Logger.LogInfo("Laser pointer removed from the ship's store");
+                LaserLogger.LogDebug("Laser pointer removed from the ship's store");
                 Items.RemoveShopItem(BuyableLaserPointer.LaserPointerItemInstance);
             }
         }
@@ -237,7 +237,7 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
         [ServerRpc(RequireOwnership = false)]
         public void AskHostForSyncServerRpc()
         {
-            ModStaticHelper.Logger.LogInfo("Asking host to sync configuration");
+            LaserLogger.LogDebug("Asking host to sync configuration");
             SyncHostConfigurationServerRpc();
         }
 

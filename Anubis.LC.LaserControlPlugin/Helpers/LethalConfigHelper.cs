@@ -19,9 +19,12 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
         public static ConfigEntry<bool> IsPointerCanDetonateLandmines;
         public static ConfigEntry<bool> IsPointerCanControlTurrets;
         public static ConfigEntry<float> PointerLaserDrainSpeed;
+        public static ConfigEntry<bool> IsDebug;
 
         public static void SetLehalConfig(ConfigFile config)
         {
+            IsDebug = config.Bind("Debug", "See all logs", true, "All logs will be throw to console");
+
             IsPointerBuyable = config.Bind("General", "Pointer Laser Buyable?", true, "The pointer laser is buyable (no scrap worth)");
             IsPointerBuyable.SettingChanged += (obj, args) =>
             {
@@ -83,13 +86,14 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
             || !HostConfigurationForPlayers.TryAdd(nameof(IsPointerCanDetonateLandmines), IsPointerCanDetonateLandmines.Value)
             || !HostConfigurationForPlayers.TryAdd(nameof(PointerLaserDrainSpeed), PointerLaserDrainSpeed.Value))
             {
-                ModStaticHelper.Logger.LogError("Could not add mod configuration to dictionary");
+                LaserLogger.LogError("Could not add mod configuration to dictionary");
             }
 
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerBuyable, true));
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanTurnOnAndOffTurrets, false));
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanDetonateLandmines, false));
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanControlTurrets, false));
+            LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsDebug, false));
             LethalConfigManager.AddConfigItem(new FloatSliderConfigItem(PointerLaserDrainSpeed, new FloatSliderOptions() {
                 Min = 15f,
                 Max = 100,

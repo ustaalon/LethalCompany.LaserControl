@@ -29,7 +29,7 @@ namespace Anubis.LC.LaserControlPlugin.Extensions
 
                 if (turret)
                 {
-                    ModStaticHelper.Logger.LogInfo("No battery to the laser pointer. Turning off turret");
+                    LaserLogger.LogDebug("No battery to the laser pointer. Turning off turret");
                     Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
                     yield return turret.TurnOffAndOnTurret();
                 }
