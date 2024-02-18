@@ -34,25 +34,26 @@ namespace Anubis.LC.LaserControlPlugin.Patches
                 leftAltAction.Enable();
             }
 
-            if (ModStaticHelper.IsThisModInstalled("com.potatoepet.AdvancedCompany"))
-            {
-                leftClickAction = new InputAction(binding: "<Mouse>/leftButton");
-                leftClickAction.canceled += context => OnLeftClickReleased(__instance);
-                leftClickAction.Enable();
-            }
-
             rightClickAction = new InputAction(binding: "<Mouse>/rightButton");
             rightClickAction.canceled += context => OnRightClickReleased(__instance);
             rightClickAction.Enable();
         }
 
-        //[HarmonyBefore(new string[] { "AdvancedCompany" })]
         [HarmonyPatch("ItemActivate")]
         [HarmonyPrefix]
         private static void ItemActivate(FlashlightItem __instance, bool used, bool buttonDown = true)
         {
             if (!__instance.name.Contains(LASER_PROP_NAME)) return;
-            if (ModStaticHelper.IsThisModInstalled("com.potatoepet.AdvancedCompany")) return;
+            CreateAndSyncBeam(__instance);
+        }
+
+        [HarmonyBefore(new string[] { "AdvancedCompany" })]
+        [HarmonyPatch("SwitchFlashlight")]
+        [HarmonyPostfix]
+        private static void SwitchFlashlight(FlashlightItem __instance, bool on)
+        {
+            if (!__instance.name.Contains(LASER_PROP_NAME)) return;
+            if (!ModStaticHelper.IsThisModInstalled("com.potatoepet.AdvancedCompany")) return;
             CreateAndSyncBeam(__instance);
         }
 
@@ -68,15 +69,15 @@ namespace Anubis.LC.LaserControlPlugin.Patches
 
             if (laserPointerRaycast.state)
             {
-                LaserLogger.LogDebug("Pointer is working");
+                LaserLogger.LogInfo("Pointer is working");
                 var turret = Networking.Instance.GetNearestTurret();
                 if (turret == null) return;
                 __instance.UseLaserPointerItemBatteries(turret);
-                LaserLogger.LogDebug("Pointer is working and turret found");
+                LaserLogger.LogInfo("Pointer is working and turret found");
 
                 if (PrevUsedTurret && PrevUsedTurret?.NetworkObjectId != turret.NetworkObjectId && PrevUsedTurret?.turretMode != TurretMode.Detection)
                 {
-                    LaserLogger.LogDebug("Previous turret no longer in player control, stop firing (ON)");
+                    LaserLogger.LogInfo("Previous turret no longer in player control, stop firing (ON)");
                     Networking.Instance.SwitchTurretModeServerRpc(PrevUsedTurret.NetworkObjectId, TurretMode.Detection);
                 }
                 counterOfUsage += Time.deltaTime;
@@ -85,13 +86,13 @@ namespace Anubis.LC.LaserControlPlugin.Patches
                 {
                     if (!IsClickToShoot)
                     {
-                        LaserLogger.LogDebug("Charging...");
+                        LaserLogger.LogInfo("Charging...");
                         Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Detection);
                         Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Charging);
                     }
                     else
                     {
-                        LaserLogger.LogDebug("Firing...");
+                        LaserLogger.LogInfo("Firing...");
                         Networking.Instance.SwitchTurretModeServerRpc(turret.NetworkObjectId, TurretMode.Firing);
                     }
                     Networking.Instance.TurnTowardsLaserBeamIfHasLOSServerRpc(turret.NetworkObjectId, laserPointerRaycast.GetHashCode());
@@ -109,7 +110,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
             }
             else
             {
-                LaserLogger.LogDebug("Laser pointer destroyed");
+                LaserLogger.LogInfo("Laser pointer destroyed");
                 Object.Destroy(laserPointerRaycast);
             }
 
@@ -117,7 +118,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
             {
                 if (PrevUsedTurret.turretMode != TurretMode.Detection)
                 {
-                    LaserLogger.LogDebug("Previous turret no longer in player control, stop firing (OFF)");
+                    LaserLogger.LogInfo("Previous turret no longer in player control, stop firing (OFF)");
                     Networking.Instance.SwitchTurretModeServerRpc(PrevUsedTurret.NetworkObjectId, TurretMode.Detection);
                 }
 
@@ -128,6 +129,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
 
         private static void OnRightClickReleased(FlashlightItem __instance)
         {
+            if (!__instance) return;
             if (IsRightBusy) return;
             LaserPointerRaycast laserPointerRaycast = __instance.GetComponent<LaserPointerRaycast>();
             if (!laserPointerRaycast || !laserPointerRaycast.state) return;
@@ -153,14 +155,15 @@ namespace Anubis.LC.LaserControlPlugin.Patches
 
             if (FlashlightItemExtensions.LaserPointerRaycastCurrentInstance == null)
             {
-                LaserLogger.LogDebug("Added LaserPointerRaycast to laser pointer");
+                LaserLogger.LogInfo("Added LaserPointerRaycast to laser pointer");
                 __instance.gameObject.AddComponent<LaserPointerRaycast>();
             }
 
             if (FlashlightItemExtensions.LaserPointerRaycastCurrentInstance && !FlashlightItemExtensions.LaserPointerRaycastCurrentInstance.state)
             {
-                LaserLogger.LogDebug("Laser pointer destroyed");
+                LaserLogger.LogInfo("Laser pointer destroyed");
                 Object.Destroy(FlashlightItemExtensions.LaserPointerRaycastCurrentInstance);
+                IsClickToShoot = false;
             }
             Networking.Instance.SyncAllTurretsAndRaycastsServerRpc();
             IsLeftBusy = false;

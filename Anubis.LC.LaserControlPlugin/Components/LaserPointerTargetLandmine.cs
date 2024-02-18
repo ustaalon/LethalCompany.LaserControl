@@ -29,7 +29,7 @@ namespace Anubis.LC.LaserControlPlugin.Components
 
                 if (tempCounter >= maxTemp)
                 {
-                    LaserLogger.LogDebug("Landmine detonated");
+                    LaserLogger.LogInfo("Landmine detonated");
                     target.TriggerMineOnLocalClientByExiting();
                 }
             }

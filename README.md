@@ -34,6 +34,10 @@ Please consider support by [this link](https://ko-fi.com/ustaalon). It will help
 - Thanks to Unique Albino (DamonB), Miss Scarlett and Azim for helping me troubleshoot
 
 # Release Notes
+### 0.1.5
+- Fixed an [issue](https://github.com/ustaalon/LethalCompany.LaserControl/issues/6) with right-click to shoot
+- All logs by default [will be hidden](https://github.com/ustaalon/LethalCompany.LaserControl/issues/7) and can be configure otherwise via config menu
+
 ### 0.1.4
 - Increasing turret turn speed when bonded with the laser pointer
 - Change laser pointer logic to Mouse Right click to shoot

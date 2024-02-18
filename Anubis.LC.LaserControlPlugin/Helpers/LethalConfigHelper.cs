@@ -7,6 +7,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Anubis.LC.LaserControlPlugin.ModNetwork;
 using LethalConfig.ConfigItems.Options;
+using System.Diagnostics;
 
 namespace Anubis.LC.LaserControlPlugin.Helpers
 {

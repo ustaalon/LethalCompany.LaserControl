@@ -7,40 +7,47 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
     {
         private static ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(ModStaticHelper.modGUID);
 
-        internal static void Log(LogLevel level, object data, bool onlyWhenDebug = true)
+        internal static void Log(LogLevel level, object data, bool overrideDebugConfiguration = false)
         {
-            if (onlyWhenDebug && level != LogLevel.Error && !LethalConfigHelper.IsDebug.Value) return;
-            Logger.Log(level, data);
+            if (overrideDebugConfiguration)
+            {
+                Logger.Log(level, data);
+            }
+            else
+            {
+                if (level != LogLevel.Error && !LethalConfigHelper.IsDebug.Value) return;
+                Logger.Log(level, data);
+            }
         }
 
-        internal static void LogFatal(object data, bool onlyWhenDebug = true)
+        internal static void LogFatal(object data, bool overrideDebugConfiguration = false)
         {
-            Log(LogLevel.Fatal, data, onlyWhenDebug);
+            Log(LogLevel.Fatal, data, overrideDebugConfiguration);
         }
 
-        internal static void LogError(object data, bool onlyWhenDebug = true)
+        internal static void LogError(object data, bool overrideDebugConfiguration = false)
         {
-            Log(LogLevel.Error, data, onlyWhenDebug);
+            Log(LogLevel.Error, data, overrideDebugConfiguration);
         }
 
-        internal static void LogWarning(object data, bool onlyWhenDebug = true)
+        internal static void LogWarning(object data, bool overrideDebugConfiguration = false)
         {
-            Log(LogLevel.Warning, data, onlyWhenDebug);
+            Log(LogLevel.Warning, data, overrideDebugConfiguration);
         }
 
-        internal static void LogMessage(object data, bool onlyWhenDebug = true)
+        internal static void LogMessage(object data, bool overrideDebugConfiguration = false)
         {
-            Log(LogLevel.Message, data, onlyWhenDebug);
+            Log(LogLevel.Message, data, overrideDebugConfiguration);
         }
 
-        internal static void LogInfo(object data, bool onlyWhenDebug = true)
+        internal static void LogInfo(object data, bool overrideDebugConfiguration = false)
         {
-            Log(LogLevel.Info, data, onlyWhenDebug);
+            Log(LogLevel.Info, data, overrideDebugConfiguration);
         }
 
-        internal static void LogDebug(object data, bool onlyWhenDebug = true)
+        internal static void LogDebug(object data, bool overrideDebugConfiguration = false)
         {
-            Log(LogLevel.Debug, data, onlyWhenDebug);
+            Log(LogLevel.Debug, data, overrideDebugConfiguration);
         }
     }
 }

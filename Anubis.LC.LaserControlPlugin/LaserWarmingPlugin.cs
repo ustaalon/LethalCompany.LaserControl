@@ -28,16 +28,17 @@ namespace Anubis.LC.LaserControlPlugin
 
             netcodeValidator.BindToPreExistingObjectByBehaviour<Networking, Terminal>();
 
-            LaserLogger.LogInfo($"{ModStaticHelper.modGUID} is loading...", false);
+            LethalConfigHelper.SetLehalConfig(Config);
 
-            LaserLogger.LogInfo($"Installing patches", false);
+            LaserLogger.LogInfo($"{ModStaticHelper.modGUID} is loading...", true);
+
+            LaserLogger.LogInfo($"Installing patches", true);
             HarmonyInstance.PatchAll(typeof(LaserControlPlugin).Assembly);
 
-            LethalConfigHelper.SetLehalConfig(Config);
 
             DontDestroyOnLoad(this);
 
-            LaserLogger.LogInfo($"Plugin {ModStaticHelper.modGUID} is loaded!", false);
+            LaserLogger.LogInfo($"Plugin {ModStaticHelper.modGUID} is loaded!", true);
         }
     }
 }

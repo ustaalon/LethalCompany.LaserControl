@@ -16,7 +16,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
             if (__instance.controlTipLines == null || __instance.controlTipLines.Length == 0) return;
             for (int i = 0; i < __instance.controlTipLines.Length; i++)
             {
-                LaserLogger.LogDebug($"{__instance.controlTipLines[i].text}");
+                LaserLogger.LogInfo($"{__instance.controlTipLines[i].text}");
                 if (!__instance.controlTipLines[i].text.Contains("Toggle turret shooting : [LMB]", StringComparison.OrdinalIgnoreCase)) continue;
                 __instance.controlTipLines[i].text = "Toggle turret shooting : [RMB]";
             }

@@ -7,7 +7,7 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
     {
         public const string modGUID = "Anubis.LaserControl";
         public const string modName = "LaserControl";
-        public const string modVersion = "0.1.4";
+        public const string modVersion = "0.1.5";
 
         public static ManualLogSource Logger = BepInEx.Logging.Logger.CreateLogSource(modGUID);
 
@@ -15,7 +15,7 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
         {
             if (Chainloader.PluginInfos.TryGetValue(mod, out BepInEx.PluginInfo modInfo))
             {
-                Logger.LogInfo($"Mod ${mod} is loaded alongside {modGUID}");
+                Logger.LogInfo($"Mod {mod} is loaded alongside {modGUID}");
                 return true;
             }
             return false;
