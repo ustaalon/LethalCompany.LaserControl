@@ -129,8 +129,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
 
         private static void OnRightClickReleased(FlashlightItem __instance)
         {
-            if (!__instance) return;
-            if (IsRightBusy) return;
+            if (!__instance || IsRightBusy) return;
             LaserPointerRaycast laserPointerRaycast = __instance.GetComponent<LaserPointerRaycast>();
             if (!laserPointerRaycast || !laserPointerRaycast.state) return;
             IsRightBusy = true;
