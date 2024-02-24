@@ -1,3 +1,7 @@
+### 0.1.6
+- Changed LethalConfig to be soft dependency
+- Added option to determine laser pointer price
+
 ### 0.1.5
 - Fixed an [issue](https://github.com/ustaalon/LethalCompany.LaserControl/issues/6) with right-click to shoot
 - All logs by default [will be hidden](https://github.com/ustaalon/LethalCompany.LaserControl/issues/7) and can be configure otherwise via config menu

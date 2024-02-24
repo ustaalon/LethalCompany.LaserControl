@@ -34,6 +34,10 @@ Please consider support by [this link](https://ko-fi.com/ustaalon). It will help
 - Thanks to Unique Albino (DamonB), Miss Scarlett and Azim for helping me troubleshoot
 
 # Release Notes
+### 0.1.6
+- Changed LethalConfig to be soft dependency
+- Added option to determine laser pointer price
+
 ### 0.1.5
 - Fixed an [issue](https://github.com/ustaalon/LethalCompany.LaserControl/issues/6) with right-click to shoot
 - All logs by default [will be hidden](https://github.com/ustaalon/LethalCompany.LaserControl/issues/7) and can be configure otherwise via config menu
@@ -46,14 +50,5 @@ Please consider support by [this link](https://ko-fi.com/ustaalon). It will help
 - Fixed compatibility with AdvancedCompany
 - Added configuration for battery drain
 - Update LethalLib version from v0.13.2 to v0.14.2
-
-### 0.1.3
-- Readme changes
-
-### 0.1.2
-- Most sync issues are solved between players
-- Laser pointer now can detonate landmines
-- Added host configuration for this mod's features
-- Fix issues with LethalLevelLoader (Egypt mod, etc)
 
 [All changelogs can be found here](https://github.com/ustaalon/LethalCompany.LaserControl/blob/rc/CHANGELOG.md)
