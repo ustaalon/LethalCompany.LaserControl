@@ -8,7 +8,7 @@ namespace Anubis.LC.LaserControlPlugin
 {
     [BepInPlugin(ModStaticHelper.modGUID, ModStaticHelper.modName, ModStaticHelper.modVersion)]
     [BepInDependency(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_VERSION)]
-    [BepInDependency("ainavt.lc.lethalconfig")]
+    [BepInDependency("ainavt.lc.lethalconfig", BepInDependency.DependencyFlags.SoftDependency)]
     public class LaserControlPlugin : BaseUnityPlugin
     {
         private Harmony HarmonyInstance = new Harmony(ModStaticHelper.modGUID);
