@@ -14,7 +14,7 @@ namespace Anubis.LC.LaserControlPlugin.Store
 
         public static Item LaserPointerItemInstance { get; private set; }
 
-        public static void RegisterShopItem(GameObject spawnPrefab)
+        public static void RegisterShopItem(GameObject spawnPrefab, int price = 50)
         {
             List<Item> allItems =
             [
@@ -25,17 +25,17 @@ namespace Anubis.LC.LaserControlPlugin.Store
 
             if (flashLaserPointer != null && !LaserPointerItemInstance)
             {
-                Items.RegisterShopItem(CreateBuyableItem(flashLaserPointer, spawnPrefab), null, null, CreateInfoNode(Name, Description), Price);
+                Items.RegisterShopItem(CreateBuyableItem(flashLaserPointer, spawnPrefab, price), null, null, CreateInfoNode(Name, Description), price);
             }
         }
 
-        private static Item CreateBuyableItem(Item original, GameObject spawnPrefab)
+        private static Item CreateBuyableItem(Item original, GameObject spawnPrefab, int price = 50)
         {
             Item item = Object.Instantiate<Item>(original);
             item.name = "Buyable" + original.name;
             item.isScrap = false;
             item.itemName = Name;
-            item.creditsWorth = Price;
+            item.creditsWorth = price;
             item.spawnPrefab = spawnPrefab;
             LaserPointerItemInstance = item;
             return item;

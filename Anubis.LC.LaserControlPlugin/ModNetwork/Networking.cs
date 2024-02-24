@@ -215,6 +215,7 @@ namespace Anubis.LC.LaserControlPlugin.ModNetwork
             SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.IsPointerCanControlTurrets), LethalConfigHelper.IsPointerCanControlTurrets.Value);
             SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.IsPointerCanDetonateLandmines), LethalConfigHelper.IsPointerCanDetonateLandmines.Value);
             SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.PointerLaserDrainSpeed), LethalConfigHelper.PointerLaserDrainSpeed.Value);
+            SyncHostConfigurationClientRpc(nameof(LethalConfigHelper.PointerLaserPrice), LethalConfigHelper.PointerLaserPrice.Value);
         }
 
         [ClientRpc]

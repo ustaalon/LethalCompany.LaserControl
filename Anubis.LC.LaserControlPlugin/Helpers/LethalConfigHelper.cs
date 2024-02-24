@@ -20,6 +20,7 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
         public static ConfigEntry<bool> IsPointerCanDetonateLandmines;
         public static ConfigEntry<bool> IsPointerCanControlTurrets;
         public static ConfigEntry<float> PointerLaserDrainSpeed;
+        public static ConfigEntry<int> PointerLaserPrice;
         public static ConfigEntry<bool> IsDebug;
 
         public static void SetLehalConfig(ConfigFile config)
@@ -32,6 +33,17 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
                 HostConfigurationForPlayers.Remove(nameof(IsPointerBuyable));
                 HostConfigurationForPlayers.TryAdd(nameof(IsPointerBuyable), IsPointerBuyable.Value);
                 if(Networking.Instance != null)
+                {
+                    Networking.Instance.SyncHostConfigurationServerRpc();
+                }
+            };
+
+            PointerLaserPrice = config.Bind("General", "Laser Pointer Price", 50, "Determines laser pointer price");
+            PointerLaserPrice.SettingChanged += (obj, args) =>
+            {
+                HostConfigurationForPlayers.Remove(nameof(PointerLaserPrice));
+                HostConfigurationForPlayers.TryAdd(nameof(PointerLaserPrice), PointerLaserPrice.Value);
+                if (Networking.Instance != null)
                 {
                     Networking.Instance.SyncHostConfigurationServerRpc();
                 }
@@ -95,10 +107,17 @@ namespace Anubis.LC.LaserControlPlugin.Helpers
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanDetonateLandmines, false));
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsPointerCanControlTurrets, false));
             LethalConfigManager.AddConfigItem(new BoolCheckBoxConfigItem(IsDebug, false));
-            LethalConfigManager.AddConfigItem(new FloatSliderConfigItem(PointerLaserDrainSpeed, new FloatSliderOptions() {
+            LethalConfigManager.AddConfigItem(new FloatSliderConfigItem(PointerLaserDrainSpeed, new FloatSliderOptions()
+            {
                 Min = 15f,
                 Max = 100,
                 RequiresRestart = false
+            }));
+            LethalConfigManager.AddConfigItem(new IntSliderConfigItem(PointerLaserPrice, new IntSliderOptions()
+            {
+                Min = 15,
+                Max = 3000,
+                RequiresRestart = true
             }));
 
             LethalConfigManager.SetModIcon(LoadNewSprite(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "icon.png")));

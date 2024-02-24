@@ -1,5 +1,6 @@
 ﻿using Anubis.LC.LaserControlPlugin.Components;
 using Anubis.LC.LaserControlPlugin.Helpers;
+using Anubis.LC.LaserControlPlugin.ModNetwork;
 using Anubis.LC.LaserControlPlugin.Store;
 using HarmonyLib;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Anubis.LC.LaserControlPlugin.Patches
                 laserPointer.itemProperties.toolTips = laserPointerToolTips.ToArray();
 
                 LaserLogger.LogInfo("Added laser pointer to the ship's store");
-                BuyableLaserPointer.RegisterShopItem(item.spawnPrefab);
+                BuyableLaserPointer.RegisterShopItem(item.spawnPrefab, Networking.Instance.GetConfigItemValueOfPlayer<int>(nameof(LethalConfigHelper.PointerLaserPrice)));
             }
         }
     }
