@@ -1,6 +1,6 @@
 {
     "name": "LaserControl",
-    "version_number": "0.1.6",
+    "version_number": "0.1.7",
     "website_url": "https://github.com/ustaalon/LethalCompany.LaserControl",
     "description": "Binding the laser pointer to the turret. What bad things could happen?",
     "dependencies": [
