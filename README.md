@@ -34,6 +34,9 @@ Please consider support by [this link](https://ko-fi.com/ustaalon). It will help
 - Thanks to Unique Albino (DamonB), Miss Scarlett and Azim for helping me troubleshoot
 
 # Release Notes
+### 0.1.7
+- HOTFIX: Fixed issue to new laser pointer price logic, might required further investigation
+
 ### 0.1.6
 - Changed LethalConfig to be soft dependency
 - Added option to determine laser pointer price
